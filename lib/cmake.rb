@@ -106,7 +106,7 @@ module CMake
     gcc_success = process_gcc_results(src_dir, build_dir, err, result)
     process_cmake_results(src_dir, build_dir, err, result, false)
     process_python_results(src_dir, build_dir, out, err, result)
-    process_latex_results(build_dir)  # not worrying about an exit code for now
+    process_latex_results(build_dir) # not worrying about an exit code for now
     msvc_success && gcc_success
   end
 

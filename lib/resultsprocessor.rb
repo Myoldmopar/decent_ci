@@ -345,11 +345,6 @@ module ResultsProcessor
   end
 
   def parse_python_line(src_dir, build_dir, line)
-    line_number = nil
-    filename = nil
-    message = nil
-    compiler_string = 'Python'
-
     # Since we are just doing line-by-line parsing, it really limits what we can get, but we'll try our best anyway
     # TypeError: cannot concatenate 'str' and 'int' objects
     /File "(?<filename>.+)", line (?<line_number>[0-9]+),.*/ =~ line
@@ -357,7 +352,7 @@ module ResultsProcessor
 
     return CodeMessage.new(relative_path(filename.strip, src_dir, build_dir), line_number, 0, 'error', 'error') if !filename.nil? && !line_number.nil?
 
-    return CodeMessage.new(relative_path(compiler_string, src_dir, build_dir), 0, 0, 'error', message) unless message.nil?
+    return CodeMessage.new(relative_path('Python', src_dir, build_dir), 0, 0, 'error', message) unless message.nil?
 
     nil
   end
@@ -366,29 +361,28 @@ module ResultsProcessor
     # searches for any _errors.json files in the doc build folder
     # these files are created by a post-build step on the docs and only exist if errors are found
     doc_build_dir = File.join(build_dir, 'doc')
-    if File.exist? doc_build_dir
-      results = []
-      Find.find(doc_build_dir) do |path|
-        next unless path.match(/._errors.json/)
+    return unless File.exist? doc_build_dir
 
-        f = File.open(path, 'r')
-        contents = f.read
-        json = JSON.parse(contents)
-        json['issues'].each do |issue|
-          severity_raw = issue['severity']
-          status = 'failed'
-          severity = 'error'
-          severity = 'warning' if severity_raw.upcase == 'WARNING'
-          full_message = ''
-          full_message += issue['type']
-          file_name = issue['locations'][0]['file']
-          line_number = issue['locations'][0]['line']
-          full_message += ': ' + issue['message']
-          results << CodeMessage.new(file_name, line_number, 0, severity, full_message)
-        end
+    results = []
+    Find.find(doc_build_dir) do |path|
+      next unless path.match(/._errors.json/)
+
+      f = File.open(path, 'r')
+      contents = f.read
+      json = JSON.parse(contents)
+      json['issues'].each do |issue|
+        severity_raw = issue['severity']
+        severity = 'error'
+        severity = 'warning' if severity_raw.upcase == 'WARNING'
+        full_message = ''
+        full_message += issue['type']
+        file_name = issue['locations'][0]['file']
+        line_number = issue['locations'][0]['line']
+        full_message += ': ' + issue['message']
+        results << CodeMessage.new(file_name, line_number, 0, severity, full_message)
       end
-      @build_results.merge(results)
     end
+    @build_results.merge(results)
   end
 
   def process_python_results(src_dir, build_dir, stdout, stderr, python_exit_code)
