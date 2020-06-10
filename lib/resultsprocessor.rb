@@ -344,20 +344,16 @@ module ResultsProcessor
     results
   end
 
-  def parse_python_or_latex_line(src_dir, build_dir, line)
+  def parse_python_line(src_dir, build_dir, line)
     line_number = nil
+    filename = nil
+    message = nil
+    compiler_string = 'Python'
+
     # Since we are just doing line-by-line parsing, it really limits what we can get, but we'll try our best anyway
-    if line.include? 'LaTeX Error'
-      # ! LaTeX Error: Environment itemize undefined.
-      /^.*Error: (?<message>.+)/ =~ line
-      compiler_string = 'LaTeX'
-    else
-      # assume Python
-      # TypeError: cannot concatenate 'str' and 'int' objects
-      /File "(?<filename>.+)", line (?<line_number>[0-9]+),.*/ =~ line
-      /^.*Error: (?<message>.+)/ =~ line
-      compiler_string = 'Python'
-    end
+    # TypeError: cannot concatenate 'str' and 'int' objects
+    /File "(?<filename>.+)", line (?<line_number>[0-9]+),.*/ =~ line
+    /^.*Error: (?<message>.+)/ =~ line
 
     return CodeMessage.new(relative_path(filename.strip, src_dir, build_dir), line_number, 0, 'error', 'error') if !filename.nil? && !line_number.nil?
 
@@ -366,17 +362,46 @@ module ResultsProcessor
     nil
   end
 
+  def process_latex_results(build_dir)
+    # searches for any _errors.json files in the doc build folder
+    # these files are created by a post-build step on the docs and only exist if errors are found
+    doc_build_dir = File.join(build_dir, 'doc')
+    if File.exist? doc_build_dir
+      results = []
+      Find.find(doc_build_dir) do |path|
+        next unless path.match(/._errors.json/)
+
+        f = File.open(path, 'r')
+        contents = f.read
+        json = JSON.parse(contents)
+        json['issues'].each do |issue|
+          severity_raw = issue['severity']
+          status = 'failed'
+          severity = 'error'
+          severity = 'warning' if severity_raw.upcase == 'WARNING'
+          full_message = ''
+          full_message += issue['type']
+          file_name = issue['locations'][0]['file']
+          line_number = issue['locations'][0]['line']
+          full_message += ': ' + issue['message']
+          results << CodeMessage.new(file_name, line_number, 0, severity, full_message)
+        end
+      end
+      @build_results.merge(results)
+    end
+  end
+
   def process_python_results(src_dir, build_dir, stdout, stderr, python_exit_code)
     results = []
     stdout.encode('UTF-8', :invalid => :replace).split("\n").each do |err|
-      msg = parse_python_or_latex_line(src_dir, build_dir, err)
+      msg = parse_python_line(src_dir, build_dir, err)
       results << msg unless msg.nil?
     end
     $logger.debug("stdout results: #{results}")
     @build_results.merge(results)
     results = []
     stderr.encode('UTF-8', :invalid => :replace).split("\n").each do |err|
-      msg = parse_python_or_latex_line(src_dir, build_dir, err)
+      msg = parse_python_line(src_dir, build_dir, err)
       results << msg unless msg.nil?
     end
     $logger.debug("stderr results: #{results}")
@@ -428,37 +453,6 @@ module ResultsProcessor
 
     messages = []
     results = []
-
-    # messages can be in two locations:
-    # the ctest generated Test.xml file will contain output from the ctests
-    # but then also, we now have a test that checks the doc build log to make sure nothing was wrong in the LaTeX build
-    # this kinda makes the test_result/build_result difference a bit muddy, but we'll make it work
-    # the docs are built as part of the normal "make" command on CI, then the "ctest" command executes all the tests,
-    #   including the ones that test the build logs, and those tests will have created json blobs.  We should find those
-    #   and try to parse them to produce test results
-    doc_build_dir = File.join(build_dir, 'doc')
-    if File.exist? doc_build_dir
-      Find.find(doc_build_dir) do |path|
-        next unless path.match(/._errors.json/)
-
-        f = File.open(path, 'r')
-        contents = f.read
-        json = JSON.parse(contents)
-        json['issues'].each do |issue|
-          severity_raw = issue['severity']
-          status = 'failed'
-          severity = 'error'
-          severity = 'warning' if severity_raw.upcase == 'WARNING'
-          full_message = ''
-          full_message += issue['type']
-          file_name = issue['locations'][0]['file']
-          line_number = issue['locations'][0]['line']
-          full_message += ': ' + issue['message']
-          doc_errors = [CodeMessage.new(file_name, line_number, 0, severity, full_message)]
-          results << TestResult.new(file_name, status, 0, full_message, doc_errors, 1)
-        end
-      end
-    end
 
     Find.find(test_dir) do |path|
       next unless path.match(/.*Test.xml/)

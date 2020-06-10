@@ -221,12 +221,12 @@ describe 'ResultsProcessor Testing' do
   context 'when calling parse_python_or_latex_line' do
     it 'should properly parse python error messages' do
       message = "# TypeError: cannot concatenate \'str\' and \'int\' objects"
-      response = parse_python_or_latex_line('/src/path/', '/build/path', message)
+      response = parse_python_line('/src/path/', '/build/path', message)
       expect(response.error?).to be_truthy
     end
     it 'should properly parse latex error messages' do
       message = '! LaTeX Error: Environment itemize undefined.'
-      response = parse_python_or_latex_line('/src/path/', '/build/path', message)
+      response = parse_python_line('/src/path/', '/build/path', message)
       expect(response.error?).to be_truthy
     end
   end
@@ -285,6 +285,61 @@ describe 'ResultsProcessor Testing' do
       expect(response[1]).to eql 6  # covered lines
       expect(response[2]).to eql 36  # total functions
       expect(response[3]).to eql 12  # covered functions
+    end
+  end
+
+  context 'when calling parse_latex_results' do
+    it 'should process doc build json error files in build/doc' do
+      @build_results = SortedSet.new
+      temp_build_dir = Dir.mktmpdir
+      doc_build_dir = File.join(temp_build_dir, 'doc')
+      Dir.mkdir(doc_build_dir)
+      doc_build_error_file = File.join(doc_build_dir, 'something_errors.json')
+      json_data = {
+          "log_file_path": "/eplus/repos/forks/doc/engineering-reference/engineering-reference.log",
+          "issues": [
+              {
+                  "severity": "WARNING",
+                  "type": "Hyper reference undefined",
+                  "locations": [
+                      {
+                          "file": "src/climate-sky-and-solar-shading-calculations/shading-module.tex",
+                          "line": 176
+                      }
+                  ],
+                  "message": " Hyper reference `surfacePropertylocalEnvironment' on page 205 undefined on input line 176.\n",
+                  "label": "surfacePropertylocalEnvironment"
+              },
+              {
+                  "severity": "WARNING",
+                  "type": "Hyper reference undefined",
+                  "locations": [
+                      {
+                          "file": "src/climate-sky-and-solar-shading-calculations/shading-module.tex",
+                          "line": 177
+                      }
+                  ],
+                  "message": " Hyper reference `schedulefileshading' on page 205 undefined on input line 177.\n",
+                  "label": "schedulefileshading"
+              },
+              {
+                  "severity": "WARNING",
+                  "type": "Package hyperref",
+                  "locations": [
+                      {
+                          "file": "src/demand-limiting.tex",
+                          "line": 22
+                      }
+                  ],
+                  "message": "Difference (2) between bookmark levels is greater (hyperref)                than one, level fixed on input line 22."
+              }
+          ]
+      }
+      json_content = JSON.dump(json_data)
+      open(doc_build_error_file, 'w') { |f| f << json_content }
+      process_latex_results(temp_build_dir)
+      expect(@build_results.length).to eql 3
+      # expect(results[0].parsed_errors[0].linenumber).to eql 176
     end
   end
 
@@ -402,58 +457,6 @@ describe 'ResultsProcessor Testing' do
       results, messages = process_ctest_results('', '', 'spec/resources/BranchWithRegressions')
       expect(results.length).to eql 1646
       expect(messages.length).to eql 0
-    end
-    it 'should process doc build json error files in build/doc' do
-      temp_dir = Dir.mktmpdir
-      temp_build_dir = Dir.mktmpdir
-      doc_build_dir = File.join(temp_build_dir, 'doc')
-      Dir.mkdir(doc_build_dir)
-      doc_build_error_file = File.join(doc_build_dir, 'something_errors.json')
-      json_data = {
-          "log_file_path": "/eplus/repos/forks/doc/engineering-reference/engineering-reference.log",
-          "issues": [
-              {
-                  "severity": "WARNING",
-                  "type": "Hyper reference undefined",
-                  "locations": [
-                      {
-                          "file": "src/climate-sky-and-solar-shading-calculations/shading-module.tex",
-                          "line": 176
-                      }
-                  ],
-                  "message": " Hyper reference `surfacePropertylocalEnvironment' on page 205 undefined on input line 176.\n",
-                  "label": "surfacePropertylocalEnvironment"
-              },
-              {
-                  "severity": "WARNING",
-                  "type": "Hyper reference undefined",
-                  "locations": [
-                      {
-                          "file": "src/climate-sky-and-solar-shading-calculations/shading-module.tex",
-                          "line": 177
-                      }
-                  ],
-                  "message": " Hyper reference `schedulefileshading' on page 205 undefined on input line 177.\n",
-                  "label": "schedulefileshading"
-              },
-              {
-                  "severity": "WARNING",
-                  "type": "Package hyperref",
-                  "locations": [
-                      {
-                          "file": "src/demand-limiting.tex",
-                          "line": 22
-                      }
-                  ],
-                  "message": "Difference (2) between bookmark levels is greater (hyperref)                than one, level fixed on input line 22."
-              }
-          ]
-      }
-      json_content = JSON.dump(json_data)
-      open(doc_build_error_file, 'w') { |f| f << json_content }
-      results, messages = process_ctest_results("/src/dir", temp_build_dir, temp_dir)
-      expect(results.length).to eql 3
-        # expect(results[0].parsed_errors[0].linenumber).to eql 176
     end
   end
 end
