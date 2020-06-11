@@ -357,32 +357,38 @@ module ResultsProcessor
     nil
   end
 
+  def process_latex_json_contents(contents)
+    results = []
+    contents['issues'].each do |issue|
+      severity_raw = issue['severity']
+      severity = 'error'
+      severity = 'warning' if severity_raw.upcase == 'WARNING'
+      full_message = ''
+      full_message += issue['type']
+      file_name = issue['locations'][0]['file']
+      line_number = issue['locations'][0]['line']
+      full_message += ': ' + issue['message']
+      results << CodeMessage.new(file_name, line_number, 0, severity, full_message)
+    end
+
+    results
+  end
+
   def process_latex_results(build_dir)
     # searches for any _errors.json files in the doc build folder
     # these files are created by a post-build step on the docs and only exist if errors are found
     doc_build_dir = File.join(build_dir, 'doc')
     return unless File.exist? doc_build_dir
 
-    results = []
     Find.find(doc_build_dir) do |path|
       next unless path.match(/._errors.json/)
 
       f = File.open(path, 'r')
       contents = f.read
       json = JSON.parse(contents)
-      json['issues'].each do |issue|
-        severity_raw = issue['severity']
-        severity = 'error'
-        severity = 'warning' if severity_raw.upcase == 'WARNING'
-        full_message = ''
-        full_message += issue['type']
-        file_name = issue['locations'][0]['file']
-        line_number = issue['locations'][0]['line']
-        full_message += ': ' + issue['message']
-        results << CodeMessage.new(file_name, line_number, 0, severity, full_message)
-      end
+      results = process_latex_json_contents(json)
+      @build_results.merge(results)
     end
-    @build_results.merge(results)
   end
 
   def process_python_results(src_dir, build_dir, stdout, stderr, python_exit_code)
