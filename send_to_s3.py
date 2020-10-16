@@ -12,10 +12,10 @@ def eprint(*args, **kwargs):
 
 try:
     try:
-        conn = boto.connect_s3()
+        conn = boto.connect_s3(is_secure=False)
     except Exception as e:
         eprint("Error connecting to s3, trying again: {0}".format(e))
-        conn = boto.connect_s3()
+        conn = boto.connect_s3(is_secure=False)
 
     bucketname = sys.argv[1]
     bucket = conn.get_bucket(bucketname)
