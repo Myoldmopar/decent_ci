@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# encoding: UTF-8 
+# encoding: UTF-8
 
 require 'fileutils'
 require 'logger'
@@ -133,8 +133,8 @@ def get_limits(t_options, t_client, t_repo)
       if trusted_branch.nil? || trusted_branch == ""
         content = github_query(t_client) { t_client.contents(t_repo, :path=>".decent_ci-limits.yaml") }
       else
-        content = github_query(t_client) { 
-          t_client.contents(t_repo, { :path=>".decent_ci-limits.yaml", :ref=>trusted_branch } ) 
+        content = github_query(t_client) {
+          t_client.contents(t_repo, { :path=>".decent_ci-limits.yaml", :ref=>trusted_branch } )
         }
       end
 
@@ -245,10 +245,22 @@ did_any_builds = false
       }
     end
 
+    BRANCH_FILTER = ENV["DECENT_CI_BRANCH_FILTER"]
+
     # loop over each potential build
     b.potential_builds.each {|p|
 
-      if ENV["DECENT_CI_BRANCH_FILTER"].nil? || ENV["DECENT_CI_BRANCH_FILTER"] == '' || p.branch_name =~ /#{ENV["DECENT_CI_BRANCH_FILTER"]}/ || p.tag_name =~ /#{ENV["DECENT_CI_BRANCH_FILTER"]}/ || p.descriptive_string =~ /#{ENV["DECENT_CI_BRANCH_FILTER"]}/
+      # Skip the ones tagged with [decent_ci_skip] for eg
+      if p.is_skip_ci?
+        $logger.info("Skipping potential build (#{p.descriptive_string}), it is tagged as skip ci.")
+        next
+      end
+
+      if (BRANCH_FILTER.nil? || BRANCH_FILTER.empty? ||
+          (!p.branch_name.nil? && p.branch_name =~ /#{BRANCH_FILTER}/)
+          # (!p.tag_name.nil? && p.tag_name =~ /#{BRANCH_FILTER}/) ||
+          # (p.descriptive_string =~ /#{BRANCH_FILTER}/)
+         )
         if p.branch_name
           $logger.info "Working on branch \"#{p.branch_name}\": Looping over compilers"
         elsif p.tag_name
