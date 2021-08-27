@@ -34,7 +34,7 @@ class PotentialBuild
   include CustomCheck
   include Runners
 
-  attr_reader :tag_name, :commit_sha, :branch_name, :repository
+  attr_reader :tag_name, :commit_sha, :branch_name, :repository, :pull_request_base_ref
   attr_accessor :test_run, :failure
 
   def initialize(client, token, repository, tag_name, commit_sha, branch_name, author, release_url, release_assets, # rubocop:disable Metrics/ParameterLists
@@ -47,6 +47,7 @@ class PotentialBuild
     @repository = repository
     @tag_name = tag_name
     @commit_sha = commit_sha
+    @commit_message = github_query(@client) { @client.commit(commit_sha).commit.message } if commit_sha
     @branch_name = branch_name
     @release_url = release_url
     @release_assets = release_assets
@@ -106,6 +107,16 @@ class PotentialBuild
 
   def pull_request?
     !@pull_id.nil?
+  end
+
+  def is_skip_ci?
+    skip_tags = ['[decent_ci_skip]', '[skip ci]', '[ci skip]', '[no ci]']
+    # If no commit message, this is a tag, so we build. Otherwise
+    if @commit_message.nil?
+      return false
+    else
+      return skip_tags.any? {|w| @commit_message.downcase.include?(w) }
+    end
   end
 
   def device_tag(compiler)

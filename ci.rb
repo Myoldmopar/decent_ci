@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# encoding: UTF-8 
+# encoding: UTF-8
 
 require 'fileutils'
 require 'logger'
@@ -133,8 +133,8 @@ def get_limits(t_options, t_client, t_repo)
       if trusted_branch.nil? || trusted_branch == ""
         content = github_query(t_client) { t_client.contents(t_repo, :path=>".decent_ci-limits.yaml") }
       else
-        content = github_query(t_client) { 
-          t_client.contents(t_repo, { :path=>".decent_ci-limits.yaml", :ref=>trusted_branch } ) 
+        content = github_query(t_client) {
+          t_client.contents(t_repo, { :path=>".decent_ci-limits.yaml", :ref=>trusted_branch } )
         }
       end
 
@@ -245,107 +245,135 @@ did_any_builds = false
       }
     end
 
+    BRANCH_FILTER = ENV["DECENT_CI_BRANCH_FILTER"] # something like '(develop|master)' for eg (or just 'develop')
+    PR_BRANCH_FILTER = ENV["DECENT_CI_PR_BRANCH_FILTER"] # The target it points to should match this. eg 'develop'
+    TAG_FILTER = ENV["DECENT_CI_TAG_FILTER"]   # something like 'v.*' or 'v\d.\d.0' if you want to do filtering
     # loop over each potential build
     b.potential_builds.each {|p|
 
-      if ENV["DECENT_CI_BRANCH_FILTER"].nil? || ENV["DECENT_CI_BRANCH_FILTER"] == '' || p.branch_name =~ /#{ENV["DECENT_CI_BRANCH_FILTER"]}/ || p.tag_name =~ /#{ENV["DECENT_CI_BRANCH_FILTER"]}/ || p.descriptive_string =~ /#{ENV["DECENT_CI_BRANCH_FILTER"]}/
-        if p.branch_name
-          $logger.info "Working on branch \"#{p.branch_name}\": Looping over compilers"
-        elsif p.tag_name
-          $logger.info "Working on tag \"#{p.tag_name}\": Looping over compilers"
-        end
+      # Skip the ones tagged with [decent_ci_skip] for eg
+      if p.is_skip_ci?
+        $logger.info("Skipping potential build (#{p.descriptive_string}), it is tagged as skip ci.")
+        next
+      end
 
-        p.compilers.each {|compiler|
-          $current_log_deviceid = p.device_id compiler
-
-          unless ENV["DECENT_CI_COMPILER_FILTER"].nil? || ENV["DECENT_CI_COMPILER_FILTER"] == ''
-            compiler_string = p.device_id compiler
-            unless compiler_string =~ /#{ENV["DECENT_CI_COMPILER_FILTER"]}/
-              $logger.info "#{compiler_string} does not match filter of #{ENV["DECENT_CI_COMPILER_FILTER"]}, skipping this compiler build"
-              next
-            end
-          end
-
-          if compiler[:release_only] && !p.release?
-            $logger.info "#{p.device_id compiler} is a release_only configuration and #{p.descriptive_string} is not a release build, skipping"
+      if p.pull_request_base_ref
+        if (!PR_BRANCH_FILTER.nil? && !PR_BRANCH_FILTER.empty?)
+          pattern = Regexp.new("#{PR_BRANCH_FILTER}")
+          if !pattern.match?(p.pull_request_base_ref)
+            $logger.info "Skipping build #{p.descriptive_string}: The target branch of the pull request is '#{p.pull_request_base_ref}' which does not match the env variable DECENT_CI_PR_BRANCH_FILTER ('#{PR_BRANCH_FILTER}')"
             next
           end
+        end
 
-          begin
-
-            # reset potential build for the next build attempt
-            p.next_build
-            p.test_run = test_mode
-
-            if p.needs_run compiler
-              did_any_builds = true
-
-              $logger.info "Beginning build for #{compiler[:name]} - #{p.descriptive_string}"
-              p.post_results compiler, true
-              begin
-
-                # We are going to purposely build the branch first before the baseline.
-                # In some cases, the branch is merged and deleted before CI completes.
-                # By the time CI gets around to it, it first builds the baseline then fails to build the deleted branch.
-                # This waste of time can be eliminated by just doing the build of the branch first, it will fail quick.
-                # We dont run tests on the branch though -- the baseline will need to be built before running them.
-
-                # First at least get a regression_base variable, it can be nil
-                regression_base = b.get_regression_base p
-
-                # Then try to build the branch
-                if File.directory?(p.this_src_dir)
-                  $logger.info "Removing pre-existing branch directory (#{p.this_src_dir})"
-                  FileUtils.rm_rf(p.this_src_dir)
-                end
-                p.do_package compiler, regression_base
-
-                # Now we have a fully built and packaged up branch build, time to build the baseline if applicable
-                if p.needs_regression_test(compiler) && regression_base
-                  regression_base.set_as_baseline
-                  regression_base.test_run = test_mode
-                  if File.directory?(p.this_regression_dir)
-                    $logger.info "Removing pre-existing regressions directory (#{p.this_regression_dir})"
-                    FileUtils.rm_rf(p.this_regression_dir)
-                  end
-                  p.clone_regression_repository
-                  if File.directory?(regression_base.this_src_dir)
-                    $logger.info "Removing pre-existing baseline directory (#{regression_base.this_src_dir})"
-                    FileUtils.rm_rf(regression_base.this_src_dir)
-                  end
-                  $logger.info "Beginning regression baseline (#{regression_base.descriptive_string}) build for #{compiler[:name]} - #{p.descriptive_string}"
-                  regression_base.do_build compiler, nil
-                  regression_base.do_test compiler, nil
-                end
-
-                # Now we have a built branch and baseline if applicable, time to run tests and push results.
-                p.do_test compiler, regression_base
-                p.do_coverage compiler
-                p.do_upload compiler
-
-              rescue => e
-                $logger.error "Logging unhandled failure #{e} #{e.backtrace}"
-                p.failure = "#{e}\n#{e.backtrace}"
-              end
-
-              if compiler[:collect_performance_results]
-                p.collect_performance_results
-              end
-
-              p.post_results compiler, false
-
-            else
-              $logger.info "Skipping build, already completed, for #{compiler[:name]} #{p.descriptive_string}"
-            end
-          rescue => e
-            $logger.error "Error creating build: #{compiler} #{p.descriptive_string}: #{e} #{e.backtrace}"
+      elsif p.branch_name
+        if (!BRANCH_FILTER.nil? && !BRANCH_FILTER.empty?)
+          pattern = Regexp.new("#{BRANCH_FILTER}")
+          if !pattern.match?(p.branch_name)
+            $logger.info "Skipping build #{p.descriptive_string}: The branch is '#{p.branch_name}' which does not match the env variable DECENT_CI_BRANCH_FILTER ('#{BRANCH_FILTER}')"
+            next
           end
+        end
 
-        }
-
-      else
-        $logger.info("Skipping build #{p.descriptive_string}, doesn't match environment filter #{ENV["DECENT_CI_BRANCH_FILTER"]}")
+        $logger.info "Working on branch \"#{p.branch_name}\": Looping over compilers"
+      elsif p.tag_name
+        if (!TAG_FILTER.nil? && !TAG_FILTER.empty?)
+          pattern = Regexp.new("#{TAG_FILTER}")
+          if !pattern.match?(p.branch_name)
+            $logger.info "Skipping build #{p.descriptive_string}: The tag name is '#{p.branch_name}' which does not match the env variable DECENT_CI_TAG_FILTER ('#{TAG_FILTER}')"
+            next
+          end
+        end
+        $logger.info "Working on tag \"#{p.tag_name}\": Looping over compilers"
       end
+
+      p.compilers.each {|compiler|
+        $current_log_deviceid = p.device_id compiler
+
+        unless ENV["DECENT_CI_COMPILER_FILTER"].nil? || ENV["DECENT_CI_COMPILER_FILTER"] == ''
+          compiler_string = p.device_id compiler
+          unless compiler_string =~ /#{ENV["DECENT_CI_COMPILER_FILTER"]}/
+            $logger.info "#{compiler_string} does not match filter of #{ENV["DECENT_CI_COMPILER_FILTER"]}, skipping this compiler build"
+            next
+          end
+        end
+
+        if compiler[:release_only] && !p.release?
+          $logger.info "#{p.device_id compiler} is a release_only configuration and #{p.descriptive_string} is not a release build, skipping"
+          next
+        end
+
+        begin
+
+          # reset potential build for the next build attempt
+          p.next_build
+          p.test_run = test_mode
+
+          if p.needs_run compiler
+            did_any_builds = true
+
+            $logger.info "Beginning build for #{compiler[:name]} - #{p.descriptive_string}"
+            p.post_results compiler, true
+            begin
+
+              # We are going to purposely build the branch first before the baseline.
+              # In some cases, the branch is merged and deleted before CI completes.
+              # By the time CI gets around to it, it first builds the baseline then fails to build the deleted branch.
+              # This waste of time can be eliminated by just doing the build of the branch first, it will fail quick.
+              # We dont run tests on the branch though -- the baseline will need to be built before running them.
+
+              # First at least get a regression_base variable, it can be nil
+              regression_base = b.get_regression_base p
+
+              # Then try to build the branch
+              if File.directory?(p.this_src_dir)
+                $logger.info "Removing pre-existing branch directory (#{p.this_src_dir})"
+                FileUtils.rm_rf(p.this_src_dir)
+              end
+              p.do_package compiler, regression_base
+
+              # Now we have a fully built and packaged up branch build, time to build the baseline if applicable
+              if p.needs_regression_test(compiler) && regression_base
+                regression_base.set_as_baseline
+                regression_base.test_run = test_mode
+                if File.directory?(p.this_regression_dir)
+                  $logger.info "Removing pre-existing regressions directory (#{p.this_regression_dir})"
+                  FileUtils.rm_rf(p.this_regression_dir)
+                end
+                p.clone_regression_repository
+                if File.directory?(regression_base.this_src_dir)
+                  $logger.info "Removing pre-existing baseline directory (#{regression_base.this_src_dir})"
+                  FileUtils.rm_rf(regression_base.this_src_dir)
+                end
+                $logger.info "Beginning regression baseline (#{regression_base.descriptive_string}) build for #{compiler[:name]} - #{p.descriptive_string}"
+                regression_base.do_build compiler, nil
+                regression_base.do_test compiler, nil
+              end
+
+              # Now we have a built branch and baseline if applicable, time to run tests and push results.
+              p.do_test compiler, regression_base
+              p.do_coverage compiler
+              p.do_upload compiler
+
+            rescue => e
+              $logger.error "Logging unhandled failure #{e} #{e.backtrace}"
+              p.failure = "#{e}\n#{e.backtrace}"
+            end
+
+            if compiler[:collect_performance_results]
+              p.collect_performance_results
+            end
+
+            p.post_results compiler, false
+
+          else
+            $logger.info "Skipping build, already completed, for #{compiler[:name]} #{p.descriptive_string}"
+          end
+        rescue => e
+          $logger.error "Error creating build: #{compiler} #{p.descriptive_string}: #{e} #{e.backtrace}"
+        end
+
+      }
     }
   rescue => e
     $logger.fatal "Unable to initiate build system #{e} #{e.backtrace}"
