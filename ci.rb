@@ -329,7 +329,9 @@ did_any_builds = false
               end
 
               if compiler[:collect_performance_results]
-                p.collect_performance_results
+                p.collect_file_sizes
+                p.collect_perf_results
+                p.collect_valgrind_counters_results
               end
 
               p.post_results compiler, false

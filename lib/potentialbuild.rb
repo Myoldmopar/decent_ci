@@ -85,7 +85,9 @@ class PotentialBuild
     @asset_url = nil
     @acting_as_baseline = false
 
-    @performance_results = nil
+    @valgrind_counters_results = nil
+    @perf_counters_results = nil
+    @file_sizes = nil
   end
 
   def set_as_baseline
@@ -396,7 +398,9 @@ class PotentialBuild
     @test_run = false
     @package_time = nil
     @install_time = nil
-    @performance_results = nil
+    @valgrind_counters_results = nil
+    @perf_counters_results = nil
+    @file_sizes = nil
     @coverage_lines = 0
     @coverage_total_lines = 0
     @coverage_functions = 0
@@ -406,7 +410,43 @@ class PotentialBuild
     @acting_as_baseline = false
   end
 
-  def parse_call_grind(build_dir, file)
+  def parse_file_sizes(build_dir, file)
+    props = {}
+
+    names = nil
+
+    IO.foreach(file) do |line|
+      if names.nil?
+        names = line.split(' ')
+      else
+        values = line.split(' ')
+
+        values.each_index {|index|
+          props[names[index]] = values[index];
+        }
+      end
+    end
+
+    return props
+  end
+
+
+  def parse_perf(build_dir, file)
+    props = {}
+
+    IO.foreach(file) do |line|
+      values = line.split(',');
+      if values.size() > 3
+        if values[0] != "<not supported>" && values[0] != ""
+          props[values[2]] = values[0].to_i
+        end
+      end
+    end
+
+    return props
+  end
+
+  def parse_callgrind(build_dir, file)
     object_files = {}
     source_files = {}
     functions = {}
@@ -434,11 +474,19 @@ class PotentialBuild
 
     IO.foreach(file) do |line|
       if /^(?<field>[a-z]+): (?<data>.*)/ =~ line
-        props[field] = if field == 'totals'
-                         data.to_i
-                       else
-                         data
-                       end
+        if field == 'totals'
+          totals = data.split(' ')
+          props['totals'] = totals[0].to_i
+
+          if totals.size() == 5
+            props['conditional_branches'] = totals[1].to_i
+            props['conditional_branches_missses'] = totals[2].to_i
+            props['indirect_jumps'] = totals[3].to_i
+            props['indirect_jump_misses']  = totals[4].to_i
+          end
+        else
+          props[field] = data
+        end
       elsif /^ob=(?<objectfileid>\([0-9]+\))?\s*(?<objectfilename>.*)?/ =~ line
         object_file = get_name.call(object_files, objectfileid, objectfilename)
       elsif /^fl=(?<sourcefileid>\([0-9]+\))?\s*(?<sourcefilename>.*)?/ =~ line
@@ -494,25 +542,51 @@ class PotentialBuild
     props.merge('data' => important_functions)
   end
 
-  def collect_performance_results
-    build_dir = File.absolute_path(this_build_dir)
+  def collect_file_sizes(build_dir: File.absolute_path(this_build_dir))
+    results = []
+    Dir["#{build_dir}/**/size.*"].each do |file|
+      file_name = file.sub(/.*size\./, '')
+      $logger.info("Parsing #{file}")
+      sizes = parse_file_sizes(build_dir, file)
+      sizes['file_name'] = file_name
+      results << sizes
+    end
 
+    @file_sizes = results
+  end
+
+  def collect_perf_results(build_dir: File.absolute_path(this_build_dir))
+    results = { 'test_files' => [] }
+
+    Dir["#{build_dir}/**/perf.*"].each do |file|
+      perf_counters_test_name = file.sub(/.*perf\./, '')
+      $logger.info("Parsing #{file}")
+      perf_output = parse_perf(build_dir, file)
+      perf_output['test_name'] = perf_counters_test_name
+      results['test_files'] << perf_output
+    end
+
+    @perf_counters_results = results
+  end
+
+
+  def collect_valgrind_counters_results(build_dir: File.absolute_path(this_build_dir))
     results = { 'object_files' => [], 'test_files' => [] }
 
     Dir["#{build_dir}/**/callgrind.*"].each do |file|
-      performance_test_name = file.sub(/.*callgrind\./, '')
-      call_grind_output = parse_call_grind(build_dir, file)
-      object_files = call_grind_output.delete('object_files')
+      valgrind_counters_test_name = file.sub(/.*callgrind\./, '')
+      callgrind_output = parse_callgrind(build_dir, file)
+      object_files = callgrind_output.delete('object_files')
       $logger.info("Object files: #{object_files}")
 
       results['object_files'].concat(object_files)
-      call_grind_output['test_name'] = performance_test_name
-      results['test_files'] << call_grind_output
+      callgrind_output['test_name'] = valgrind_counters_test_name
+      results['test_files'] << callgrind_output
     end
 
     results['object_files'].uniq!
 
-    @performance_results = results
+    @valgrind_counters_results = results
   end
 
   def try_to_repost_asset(response, asset_name)
@@ -658,16 +732,52 @@ class PotentialBuild
       package_results_data << b.inspect
     end
 
-    performance_total_time = nil
-    performance_test_count = 0
+    valgrind_counters_total_time = nil
+    valgrind_counters_test_count = 0
+    valgrind_counters_total_conditional_branches = nil
+    valgrind_counters_total_conditional_branch_misses = nil
+    valgrind_counters_total_indirect_jumps = nil
+    valgrind_counters_total_indirect_jump_misses = nil
 
-    unless @performance_results.nil?
-      performance_total_time = 0
+    unless @valgrind_counters_results.nil?
+      valgrind_counters_total_time = 0
+      valgrind_counters_total_conditional_branches = 0
+      valgrind_counters_total_conditional_branch_misses = 0
+      valgrind_counters_total_indirect_jumps = 0
+      valgrind_counters_total_indirect_jump_misses = 0
 
-      @performance_results['test_files'].each do |v|
-        performance_test_count += 1
-        performance_total_time += v['totals'] unless v['totals'].nil?
+      @valgrind_counters_results['test_files'].each do |v|
+        valgrind_counters_test_count += 1
+        valgrind_counters_total_time += v['totals'] unless v['totals'].nil?
+        valgrind_counters_total_conditional_branches += v['conditional_branches'] unless v['conditional_branches'].nil?
+        valgrind_counters_total_conditional_branch_misses += v['conditional_branch_misses'] unless v['conditional_branch_misses'].nil?
+        valgrind_counters_total_indirect_jumps += v['indirect_jumps'] unless v['indirect_jumps'].nil?
+        valgrind_counters_total_indirect_jump_misses += v['indirect_jump_misses'] unless v['indirect_jump_misses'].nil?
       end
+    end
+
+    perf_counters = {}
+
+    unless @perf_counters_results.nil?
+      $logger.debug("perf counters: #{@perf_counters_results}")
+      perf_test_count = 0
+      @perf_counters_results['test_files'].each do |v|
+        perf_test_count += 1
+        v.each do |key, value|
+
+          if ! value.is_a? String
+            new_key = "perf_total_" + key
+
+            if perf_counters[new_key].nil?
+              perf_counters[new_key] = 0
+            end
+
+            $logger.debug("Key: '#{new_key}' value: '#{value}'")
+            perf_counters[new_key] += value;
+          end
+        end
+      end
+      perf_counters['perf_test_count'] = perf_test_count
     end
 
     package_names_string = nil
@@ -729,9 +839,17 @@ class PotentialBuild
       'coverage_total_functions' => @coverage_total_functions,
       'coverage_url' => @coverage_url,
       'asset_url' => @asset_url,
-      'performance_total_time' => performance_total_time,
-      'performance_test_count' => performance_test_count
+      'performance_total_time' => valgrind_counters_total_time,
+      'performance_test_count' => valgrind_counters_test_count,
+      'valgrind_counters_total_time' => valgrind_counters_total_time,
+      'valgrind_counters_test_count' => valgrind_counters_test_count,
+      'valgrind_counters_total_conditional_branches' => valgrind_counters_total_conditional_branches,
+      'valgrind_counters_total_conditional_branch_misses' => valgrind_counters_total_conditional_branch_misses,
+      'valgrind_counters_total_indirect_jumps' => valgrind_counters_total_indirect_jumps,
+      'valgrind_counters_total_indirect_jump_misses' => valgrind_counters_total_indirect_jump_misses
     }
+
+    yaml_data.merge!(perf_counters)
 
     json_data = {
       'build_results' => build_results_data,
@@ -739,7 +857,9 @@ class PotentialBuild
       'failure' => @failure,
       'package_results' => package_results_data,
       'configuration' => yaml_data,
-      'performance_results' => @performance_results
+      'performance_results' => @valgrind_counters_results,
+      'perf_performance_results' => @perf_counters_results,
+      'file_sizes' => @file_sizes
     }
 
     json_document =
