@@ -410,40 +410,35 @@ class PotentialBuild
     @acting_as_baseline = false
   end
 
-  def parse_file_sizes(build_dir, file)
+  def parse_file_sizes(file)
     props = {}
 
     names = nil
 
     IO.foreach(file) do |line|
       if names.nil?
-        names = line.split(' ')
+        names = line.split
       else
-        values = line.split(' ')
+        values = line.split
 
-        values.each_index {|index|
-          props[names[index]] = values[index];
-        }
-      end
-    end
-
-    return props
-  end
-
-
-  def parse_perf(build_dir, file)
-    props = {}
-
-    IO.foreach(file) do |line|
-      values = line.split(',');
-      if values.size() > 3
-        if values[0] != "<not supported>" && values[0] != ""
-          props[values[2]] = values[0].to_i
+        values.each_index do |index|
+          props[names[index]] = values[index]
         end
       end
     end
 
-    return props
+    props
+  end
+
+  def parse_perf(file)
+    props = {}
+
+    IO.foreach(file) do |line|
+      values = line.split(',')
+      props[values[2]] = values[0].to_i if values.size > (3) && (values[0] != '<not supported>' && values[0] != '')
+    end
+
+    props
   end
 
   def parse_callgrind(build_dir, file)
@@ -475,14 +470,14 @@ class PotentialBuild
     IO.foreach(file) do |line|
       if /^(?<field>[a-z]+): (?<data>.*)/ =~ line
         if field == 'totals'
-          totals = data.split(' ')
+          totals = data.split
           props['totals'] = totals[0].to_i
 
-          if totals.size() == 5
+          if totals.size == 5
             props['conditional_branches'] = totals[1].to_i
             props['conditional_branches_missses'] = totals[2].to_i
             props['indirect_jumps'] = totals[3].to_i
-            props['indirect_jump_misses']  = totals[4].to_i
+            props['indirect_jump_misses'] = totals[4].to_i
           end
         else
           props[field] = data
@@ -547,7 +542,7 @@ class PotentialBuild
     Dir["#{build_dir}/**/size.*"].each do |file|
       file_name = file.sub(/.*size\./, '')
       $logger.info("Parsing #{file}")
-      sizes = parse_file_sizes(build_dir, file)
+      sizes = parse_file_sizes(file)
       sizes['file_name'] = file_name
       results << sizes
     end
@@ -568,7 +563,6 @@ class PotentialBuild
 
     @perf_counters_results = results
   end
-
 
   def collect_valgrind_counters_results(build_dir: File.absolute_path(this_build_dir))
     results = { 'object_files' => [], 'test_files' => [] }
@@ -764,17 +758,14 @@ class PotentialBuild
       @perf_counters_results['test_files'].each do |v|
         perf_test_count += 1
         v.each do |key, value|
+          next if value.is_a? String
 
-          if ! value.is_a? String
-            new_key = "perf_total_" + key
+          new_key = "perf_total_#{key}"
 
-            if perf_counters[new_key].nil?
-              perf_counters[new_key] = 0
-            end
+          perf_counters[new_key] = 0 if perf_counters[new_key].nil?
 
-            $logger.debug("Key: '#{new_key}' value: '#{value}'")
-            perf_counters[new_key] += value;
-          end
+          $logger.debug("Key: '#{new_key}' value: '#{value}'")
+          perf_counters[new_key] += value
         end
       end
       perf_counters['perf_test_count'] = perf_test_count
