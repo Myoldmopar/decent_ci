@@ -212,7 +212,7 @@ describe 'PotentialBuild Testing' do
       expect(p.needs_regression_test({:analyze_only => false, :skip_regression => false})).to be_truthy
     end
   end
-  context 'when calling parse_call_grind' do
+  context 'when calling parse_callgrind' do
     before do
       allow_any_instance_of(Octokit::Client).to receive(:content).and_return([PotentialBuildNamedDummy.new('.decent_ci.yaml')])
       allow_any_instance_of(Octokit::Client).to receive(:repo).and_return(PotentialBuildDummyRepo.new)
@@ -221,7 +221,7 @@ describe 'PotentialBuild Testing' do
     end
     it 'should properly parse a callgrind file' do
       dir = Dir.mktmpdir
-      call_grind_file = File.join(dir, 'callgrind.out')
+      callgrind_file = File.join(dir, 'callgrind.out')
       output_content = <<-GRIND
 # callgrind format
 events: Instructions
@@ -248,8 +248,8 @@ fl=file2.c
 fn=func2
 20 700
       GRIND
-      open(call_grind_file, 'w') { |f| f << output_content }
-      response = @p.parse_call_grind(dir, call_grind_file)
+      open(callgrind_file, 'w') { |f| f << output_content }
+      response = @p.parse_callgrind(dir, callgrind_file)
       expect(response['data'].length).to eql 2
     end
   end
