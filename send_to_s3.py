@@ -7,8 +7,10 @@ import sys
 import os
 import datetime
 
+
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
+
 
 try:
     try:
@@ -27,15 +29,17 @@ try:
 
     for root, subFolders, files in os.walk(sourcedir):
         for file in files:
-            filename = os.path.join(root,file)
+            filename = os.path.join(root, file)
             filepath = "{0}/{1}".format(filedir, os.path.relpath(filename, sourcedir))
             print("{0} => {1}".format(filename, filepath), file=sys.stderr)
             key = boto.s3.key.Key(bucket, filepath)
-            file_to_send = open(filename, 'r')
+            file_to_send = open(filename, 'rb')
             if (filepath.endswith(".html")):
                 content_type = {"Content-Type": "text/html"}
             elif (filepath.endswith(".svg")):
                 content_type = {"Content-Type": "image/svg+xml"}
+            elif (filepath.endswith(".png")):
+                content_type = {"Content-Type": "image/png"}
             else:
                 content_type = {"Content-Type": "application/octet-stream"}
 
