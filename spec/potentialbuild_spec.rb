@@ -140,7 +140,7 @@ describe 'PotentialBuild Testing' do
       allow_any_instance_of(Octokit::Client).to receive(:repo).and_return(PotentialBuildDummyRepo.new)
       client = Octokit::Client.new(:access_token => 'abc')
       p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', '', '', '', 0, '', '')
-      expect(p.needs_regression_test({:skip_regression => false})).to be_falsey
+      expect(p.needs_regression_test({:skip_regression => false})).to be_truthy
       expect(p.needs_regression_test({:skip_regression => true})).to be_falsey
       ENV['DECENT_CI_SKIP_REGRESSIONS'] = 'Y'
       expect(p.needs_regression_test({:skip_regression => false})).to be_falsey
