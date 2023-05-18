@@ -3,6 +3,7 @@
 require 'rubygems'
 require 'rake'
 require 'rspec/core/rake_task'
+require 'coveralls/rake/task'
 
 desc 'Run RSpec'
 RSpec::Core::RakeTask.new do |t|
@@ -24,3 +25,4 @@ SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new(
   ]
 )
 SimpleCov.start
+Coveralls::RakeTask.new
