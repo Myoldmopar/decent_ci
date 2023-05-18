@@ -151,9 +151,6 @@ describe 'Configuration Testing' do
       dir1 = Dir.mktmpdir
       cur_path = ENV['PATH']
       ENV['PATH'] = dir1
-      binary_extension = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';')[0] : ''
-      binary_file_name = "#{binary_name}#{binary_extension}"
-      cc_binary = File.join(dir1, binary_file_name)
       binary_name = "gcc"
       binary_extension = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';')[0] : ''
       binary_file_name = "#{binary_name}#{binary_extension}"
