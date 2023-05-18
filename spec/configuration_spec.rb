@@ -1,7 +1,8 @@
 require 'base64'
 require 'rspec'
-require_relative '../lib/configuration'
 require 'octokit'
+require_relative 'spec_helper'
+require_relative '../lib/configuration'
 
 class YamlResponse
   attr_reader :content

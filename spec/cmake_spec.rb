@@ -1,4 +1,5 @@
 require 'rspec'
+require_relative 'spec_helper'
 require_relative '../lib/cmake'
 require_relative '../lib/configuration'
 require_relative '../lib/resultsprocessor'

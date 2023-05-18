@@ -1,6 +1,7 @@
 require 'octokit'
 require 'rspec'
 
+require_relative 'spec_helper'
 require_relative '../lib/decent_exceptions'
 require_relative '../lib/potentialbuild'
 require_relative '../lib/build'
