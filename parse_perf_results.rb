@@ -6,7 +6,6 @@ require 'fileutils'
 require 'logger'
 require 'octokit'
 require_relative 'lib/cppcheck'
-require_relative 'lib/custom_check'
 require_relative 'lib/potentialbuild'
 require_relative 'lib/resultsprocessor'
 

@@ -18,8 +18,6 @@ require_relative 'testresult'
 require_relative 'cmake'
 require_relative 'configuration'
 require_relative 'resultsprocessor'
-require_relative 'cppcheck'
-require_relative 'custom_check'
 require_relative 'github'
 require_relative 'lcov'
 require_relative 'runners'
@@ -29,7 +27,6 @@ class PotentialBuild
   include CMake
   include Configuration
   include ResultsProcessor
-  include Cppcheck
   include Lcov
   include CustomCheck
   include Runners
@@ -134,11 +131,7 @@ class PotentialBuild
   end
 
   def needs_release_package(compiler)
-    if compiler[:analyze_only]
-      false
-    else
-      true
-    end
+    true
   end
 
   def checkout(src_dir)
@@ -222,29 +215,6 @@ class PotentialBuild
     out
   end
 
-  def do_package(compiler, regression_baseline)
-    do_packaging = !compiler[:analyze_only]
-    return nil unless (ENV['DECENT_CI_ALL_RELEASE'] || (release? && do_packaging)) && !compiler[:skip_packaging]
-
-    $logger.info("Beginning packaging phase #{release?} #{do_packaging}")
-    src_dir = this_src_dir
-    build_dir = this_build_dir
-
-    do_build compiler, regression_baseline, true
-
-    start_time = Time.now
-    begin
-      @package_locations = cmake_package compiler, src_dir, build_dir, compiler[:build_type]
-    rescue => e
-      $logger.error("Error creating package #{e}")
-      @package_time = Time.now - start_time
-      raise
-    end
-
-    @package_time = Time.now - start_time
-    @package_locations
-  end
-
   def needs_run(compiler)
     return true if @test_run
 
@@ -321,18 +291,9 @@ class PotentialBuild
     start_time = Time.now
     checkout_succeeded = checkout src_dir
     # TODO: Abort if checkout did not succeed...
-    case compiler[:name]
-    when 'custom_check'
-      $logger.info('Running custom_check')
-      @test_results = custom_check @config, compiler, src_dir, build_dir
-    when 'cppcheck'
-      $logger.info('Running cppcheck')
-      cppcheck @config, compiler, src_dir, build_dir
-    else
-      this_device_id = device_id compiler
-      args = CMakeBuildArgs.new(compiler[:build_type], this_device_id, is_release)
-      cmake_build compiler, src_dir, build_dir, this_regression_dir, regression_baseline, args if checkout_succeeded
-    end
+    this_device_id = device_id compiler
+    args = CMakeBuildArgs.new(compiler[:build_type], this_device_id, is_release)
+    cmake_build compiler, src_dir, build_dir, this_regression_dir, regression_baseline, args if checkout_succeeded
     @build_time = 0 if @build_time.nil?
     @build_time += (Time.now - start_time)
     # TODO: Should we return true here?
@@ -344,22 +305,19 @@ class PotentialBuild
 
     build_succeeded = do_build compiler, regression_baseline
 
-    if compiler[:name] == 'cppcheck' || compiler[:name] == 'custom_check'
-    else
-      start_time = Time.now
-      if ENV['DECENT_CI_SKIP_TEST']
-        $logger.debug('Skipping test, DECENT_CI_SKIP_TEST is set in the environment')
-      elsif build_succeeded
-        cmake_test compiler, src_dir, build_dir, compiler[:build_type]
-      end
-      @test_time = 0 if @test_time.nil?
-      # handle the case where test is called more than once
-      @test_time += (Time.now - start_time)
+    start_time = Time.now
+    if ENV['DECENT_CI_SKIP_TEST']
+      $logger.debug('Skipping test, DECENT_CI_SKIP_TEST is set in the environment')
+    elsif build_succeeded
+      cmake_test compiler, src_dir, build_dir, compiler[:build_type]
     end
+    @test_time = 0 if @test_time.nil?
+    # handle the case where test is called more than once
+    @test_time += (Time.now - start_time)
   end
 
   def needs_regression_test(compiler)
-    (!@config.regression_script.nil? || !@config.regression_repository.nil?) && !compiler[:analyze_only] && !ENV['DECENT_CI_SKIP_REGRESSIONS'] && !compiler[:skip_regression]
+    (!@config.regression_script.nil? || !@config.regression_repository.nil?) && !ENV['DECENT_CI_SKIP_REGRESSIONS'] && !compiler[:skip_regression]
   end
 
   def clone_regression_repository
@@ -619,54 +577,6 @@ class PotentialBuild
   def post_results(compiler, pending)
     @dateprefix = DateTime.now.utc.strftime('%F') if @dateprefix.nil?
 
-    if !@test_run && (!@package_locations.nil? && @config.post_release_package)
-      $logger.info("Attempting to upload #{@package_locations.length} packages")
-      @package_locations.each do |location|
-        $logger.info("Uploading package #{location}")
-
-        num_tries = 3
-        try_num = 0
-        succeeded = false
-
-        fatal_failure = false
-
-        asset_name = Pathname.new(location).basename.to_s
-        while try_num < num_tries && !succeeded && !fatal_failure
-          response = nil
-
-          begin
-            response = github_query(@client) { @client.upload_asset(@release_url, location, :content_type => compiler[:package_mimetype], :name => asset_name) }
-          rescue => e
-            if try_num.zero? && e.to_s.include?('already_exists')
-              $logger.error('already_exists error on 0th attempt, fatal, we shall not overwrite existing upload')
-              @package_results << CodeMessage.new('CMakeLists.txt', 1, 0, 'error', "Error, asset already_exists on 0th try, refusing to upload asset: #{e}")
-              fatal_failure = true
-              try_num += 1
-              next
-            else
-              $logger.error("Error uploading asset, trying again: #{e}")
-              @package_results << CodeMessage.new('CMakeLists.txt', 1, 0, 'warning', "Error while attempting to upload release asset.\nDuring attempt #{try_num}\n#{e}")
-            end
-          end
-
-          if response && response.state != 'new'
-            $logger.info("Asset upload appears to have succeeded. url: #{response.url}, state: #{response.state}")
-            succeeded = true
-          else
-            $logger.error('Asset upload appears to have failed, going to try and delete the failed bits.')
-            try_to_repost_asset(response, asset_name)
-          end
-
-          try_num += 1
-        end
-
-        unless succeeded
-          $logger.error("After #{try_num} tries we still failed to upload the release asset.")
-          @package_results << CodeMessage.new('CMakeLists.txt', 1, 0, 'error', "#{try_num} attempts where made to upload release assets and all failed")
-        end
-      end
-    end
-
     test_results_data = []
 
     test_results_passed = 0
@@ -811,7 +721,6 @@ class PotentialBuild
       'pull_request_base_ref' => @pull_request_base_ref.to_s,
       'device_id' => device_id(compiler),
       'pending' => pending,
-      'analyze_only' => compiler[:analyze_only],
       'build_time' => @build_time,
       'test_time' => @test_time,
       'package_time' => @package_time,
@@ -884,11 +793,6 @@ class PotentialBuild
     end
 
     test_badge = "<a href='#{@config.results_base_url}/#{build_base_name compiler}.html'>![Test Badge](http://img.shields.io/badge/tests%20passed-#{test_string}-#{test_color}.png)</a>"
-
-    if compiler[:analyze_only]
-      test_failed = false
-      test_badge = ''
-    end
 
     build_failed = false
     if build_errors.positive?

@@ -147,16 +147,13 @@ describe 'Configuration Testing' do
       expect{ setup_compiler_version({:name => 'Visual Studio'}) }.to raise_error(RuntimeError)  # VS requires version
       expect{ setup_compiler_version({:name => 'OtherCompiler'}) }.to raise_error(RuntimeError)  # unknown compiler
     end
-    it 'should find valid versions for gcc, clang, and handle cppcheck' do
+    it 'should find valid versions for gcc, clang' do
       dir1 = Dir.mktmpdir
       cur_path = ENV['PATH']
       ENV['PATH'] = dir1
-      binary_name = "cppcheck"
       binary_extension = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';')[0] : ''
       binary_file_name = "#{binary_name}#{binary_extension}"
       cc_binary = File.join(dir1, binary_file_name)
-      open(cc_binary, 'w') { |f| f << "#!/bin/bash\necho Cppcheck 1" }
-      File.chmod(0777, cc_binary)
       binary_name = "gcc"
       binary_extension = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';')[0] : ''
       binary_file_name = "#{binary_name}#{binary_extension}"
@@ -169,7 +166,6 @@ describe 'Configuration Testing' do
       cc_binary = File.join(dir1, binary_file_name)
       open(cc_binary, 'w') { |f| f << "#!/bin/bash\necho clang version 3" }
       File.chmod(0777, cc_binary)
-      expect(setup_compiler_version({:name => 'cppcheck'})).to be_nil
       expect(setup_compiler_version({:name => 'gcc'})).to eql '2'
       expect(setup_compiler_version({:name => 'clang'})).to eql '3'
       ENV['PATH'] = cur_path
@@ -206,30 +202,6 @@ describe 'Configuration Testing' do
     end
     it 'should return a valid number' do
       expect(setup_compiler_num_processors({})).to be_a Integer
-    end
-  end
-  context 'when calling setup_compiler_cppcheck_bin' do
-    it 'should return if already specified' do
-      expect(setup_compiler_cppcheck_bin({:cppcheck_bin => 'Already here'}, nil)).to eql 'Already here'
-    end
-    it 'should fail if a version cannot be found' do
-      cur_path = ENV['PATH']
-      ENV['PATH'] = ''
-      expect{ setup_compiler_cppcheck_bin({}, nil) }.to raise_error RuntimeError
-      ENV['PATH'] = cur_path
-    end
-    it 'should find the cppcheck binary by name' do
-      dir1 = Dir.mktmpdir
-      binary_name = "cppcheck-1"
-      binary_extension = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';')[0] : ''
-      binary_file_name = "#{binary_name}#{binary_extension}"
-      cc_binary = File.join(dir1, binary_file_name)
-      open(cc_binary, 'w') { |f| f << "#!/bin/bash\necho 1" }
-      File.chmod(0777, cc_binary)
-      cur_path = ENV['PATH']
-      ENV['PATH'] = dir1
-      expect(setup_compiler_cppcheck_bin({}, 1)).to include cc_binary
-      ENV['PATH'] = cur_path
     end
   end
   context 'when calling setup_compiler_build_generator' do

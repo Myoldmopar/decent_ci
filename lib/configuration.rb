@@ -128,7 +128,6 @@ module Configuration
       :engine => 'cmake',
       :post_results_comment => true,
       :post_results_status => true,
-      :post_release_package => true,
       :cmake_bin => "\"#{which('cmake', cmake_paths)}\"",
       :ctest_bin => "\"#{which('ctest', cmake_paths)}\"",
       :cpack_bin => "\"#{which('cpack', cmake_paths)}\""
@@ -167,11 +166,8 @@ module Configuration
       version
     when 'gcc'
       `gcc -dumpversion`
-    when 'cppcheck', 'custom_check'
-      # we can actually leave the version nil for cppcheck, it will allow a version-agnostic spec
-      nil
     else
-      raise 'Invalid compiler specified, must be one of clang, gcc, custom_check, cppcheck, or a variation on "Visual Studio VV YYYY"'
+      raise 'Invalid compiler specified, must be one of clang, gcc, or a variation on "Visual Studio VV YYYY"'
     end
   end
 
@@ -181,22 +177,6 @@ module Configuration
     description = compiler[:name].gsub(/\s+/, '')
     description = "#{description}-#{compiler[:version]}" unless compiler[:version].nil?
     description
-  end
-
-  def setup_compiler_package_generator(compiler, os_name)
-    return compiler[:build_package_generator] unless compiler[:build_package_generator].nil?
-
-    case os_name
-    when 'Windows'
-      generator = 'NSIS'
-    when 'Linux'
-      generator = 'DEB'
-    when 'MacOS'
-      generator = 'IFW'
-    else
-      raise 'Unknown operating system found, only supporting Windows, Linux, and MacOS'
-    end
-    generator
   end
 
   def setup_compiler_extra_flags(compiler, is_release)
@@ -215,20 +195,6 @@ module Configuration
     num_processors = processor_count
     num_processors -= 1 if num_processors > 2
     num_processors
-  end
-
-  def setup_compiler_cppcheck_bin(compiler, version)
-    return compiler[:cppcheck_bin] unless compiler[:cppcheck_bin].nil?
-
-    if version.nil?
-      potential_name = which('cppcheck')
-      raise 'Unable to find a cppcheck binary (version agnostic)' if potential_name.nil?
-    else
-      potential_name = which("cppcheck-#{version}")
-      raise "Unable to find binary for: cppcheck version #{version}" if potential_name.nil?
-    end
-
-    potential_name
   end
 
   def setup_compiler_build_generator(compiler)
@@ -286,17 +252,13 @@ module Configuration
     compiler[:architecture] = setup_compiler_architecture(compiler)
     compiler[:version] = setup_compiler_version(compiler)
     compiler[:cc_bin], compiler[:cxx_bin] = setup_gcc_style_cc_and_cxx(compiler)
-    compiler[:analyze_only] = false if compiler[:analyze_only].nil?
+    compiler[:analyze_only] = false
     compiler[:release_only] = false if compiler[:release_only].nil?
-    compiler[:cppcheck_bin] = setup_compiler_cppcheck_bin(compiler, compiler[:version]) if compiler[:name] == 'cppcheck'
-    compiler[:analyze_only] = true if compiler[:name] == 'custom_check' || compiler[:name] == 'cppcheck'
     compiler[:skip_packaging] = (compiler[:skip_packaging] =~ /true/i) || compiler[:skip_packaging] if compiler[:skip_packaging].nil?
     compiler[:description] = setup_compiler_description(compiler)
-    compiler[:build_package_generator] = setup_compiler_package_generator(compiler, os_version)
     compiler[:build_type] = 'Release' if compiler[:build_type].nil? || compiler[:build_type] == ''
     compiler[:build_generator] = setup_compiler_build_generator(compiler)
     compiler[:target_arch] = setup_compiler_target_arch(compiler)
-    compiler[:package_mimetype] = 'application/octet-stream'
     compiler[:skip_regression] = false if compiler[:skip_regression].nil?
     compiler[:collect_performance_results] = false if compiler[:collect_performance_results].nil?
     compiler[:ctest_filter] = '' if compiler[:ctest_filter].nil?

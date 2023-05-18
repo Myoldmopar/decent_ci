@@ -3,72 +3,6 @@ require_relative '../lib/resultsprocessor'
 include ResultsProcessor
 
 describe 'ResultsProcessor Testing' do
-  context 'when calling parse_custom_check_line' do
-    it 'should be ok with no keys at all' do
-      message = parse_custom_check_line('/src/path', '/build/path', "{}")
-      expect(message.error?).to be_truthy
-      expect(message.message).to be_truthy
-      expect(message.linenumber).to eql 0
-      expect(message.colnumber).to eql 0
-    end
-    it 'should be add an ID and tool to the message' do
-      message = parse_custom_check_line('/src/path', '/build/path', %Q({"tool": "mytool", "id": "this_id"}))
-      expect(message.error?).to be_truthy
-      expect(message.message).to be_truthy
-      expect(message.message).to include "mytool"
-      expect(message.message).to include "this_id"
-    end
-    it 'should return an error' do
-      message = parse_custom_check_line('/src/path', '/build/path', 'MyErrorMessage')
-      expect(message.error?).to be_truthy
-    end
-    it 'should return an error for non-json message' do
-      message = parse_custom_check_line('/src/path', '/build/path', 'MyErrorMessage')
-      expect(message.error?).to be_truthy
-    end
-    it 'should return an error for json-array message' do
-      message = parse_custom_check_line('/src/path', '/build/path', "[{\"key\": 1}]")
-      expect(message.error?).to be_truthy
-    end
-  end
-
-  context 'when calling process_custom_check_results' do
-    it 'should handle no data' do
-      @build_results = SortedSet.new
-      process_custom_check_results('/src/dir', '/build/dir', '', '', 0)
-      expect(@build_results.length).to eql 0
-    end
-    # it 'should handle data with an invalid line' do
-    #   @build_results = SortedSet.new
-    #   stdout = "{\"messagetype\": \"warning\"}\n{)\n{\"messagetype\":\"passed\"}"
-    #   process_custom_check_results('/src/dir', '/build/dir', stdout, '', 0)
-    #   expect(@build_results.length).to eql 3  # should be three unique things here
-    # end
-    it 'should handle duplicates' do
-      @build_results = SortedSet.new
-      stdout = "{}\n{)\n{}"  # note second is invalid
-      process_custom_check_results('/src/dir', '/build/dir', stdout, '', 0)
-      expect(@build_results.length).to eql 2  # should only have two here because two are duplicates
-    end
-    it 'should handle blank lines by ignoring them' do
-      @build_results = SortedSet.new
-      stdout = "{}\n\n{)"
-      process_custom_check_results('/src/dir', '/build/dir', stdout, '', 0)
-      expect(@build_results.length).to eql 2  # should have two here
-    end
-    # it 'should read from stdout and stderr both' do
-    #   @build_results = SortedSet.new
-    #   stdout = "{}\n\n{)"
-    #   stderr = "{\"messagetype\": \"warning\"}\n{\"messagetype\":\"passed\"}"
-    #   process_custom_check_results('/src/dir', '/build/dir', stdout, stderr, 0)
-    #   expect(@build_results.length).to eql 4  # should have two here
-    # end
-    it 'should return failure if exit code was nonzero' do
-      @build_results = SortedSet.new
-      response = process_custom_check_results('/src/dir', '/build/dir', '', '', 1)
-      expect(response).to be_falsey
-    end
-  end
 
   context 'when calling recover_file_case' do
     it 'should just return the original file case on Linux' do
@@ -77,43 +11,6 @@ describe 'ResultsProcessor Testing' do
       expect(recover_file_case('BOY TWO')).to eql 'BOY TWO'
     end
     # once we test on Windows, we should ONLY test recover_file_case on there, and eliminate the IF WINDOWS block
-  end
-
-  context 'when calling parse_cppcheck_line' do
-    it 'should properly parse a few variations' do
-      message = '[File.cc:23]: (error) Hey'
-      response = parse_cppcheck_line('/src/path/', '/build/path', message)
-      expect(response.error?).to be_truthy
-      message = '[File.cc:23]: (PASS) Hey'
-      response = parse_cppcheck_line('/src/path/', '/build/path', message)
-      expect(response.error?).to be_falsey
-      message = '[:23]: (PASS) Hey'
-      response = parse_cppcheck_line('/src/path/', '/build/path', message)
-      expect(response).to be_nil
-      message = '[src/EnergyPlus/PipeHeatTransfer.cc:1895]: (error) Uninitialized variable: AirVel'
-      response = parse_cppcheck_line('/src/path/', '/build/path', message)
-      expect(response).to be_truthy
-    end
-  end
-
-  context 'when calling process_cppcheck_results' do
-    it 'should handle no data' do
-      @build_results = SortedSet.new
-      process_cppcheck_results('/src/dir', '/build/dir', '', 0)
-      expect(@build_results.length).to eql 0
-    end
-    it 'should handle invalid lines by ignoring them' do
-      @build_results = SortedSet.new
-      stderr = "[File.cc:23]: (Error) Hey\nOH HIA"
-      process_cppcheck_results('/src/dir', '/build/dir', stderr, 0)
-      expect(@build_results.length).to eql 1
-    end
-    it 'should handle blank lines by ignoring them' do
-      @build_results = SortedSet.new
-      stderr = "[File.cc:23]: (Error) Hey\n\n[File2.cc:23]: (Error) Hey"
-      process_cppcheck_results('/src/dir', '/build/dir', stderr, 0)
-      expect(@build_results.length).to eql 2
-    end
   end
 
   context 'when calling parse_generic_line' do
