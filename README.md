@@ -1,7 +1,8 @@
 decent_ci
 =========
 
-[![Build Status](https://travis-ci.org/Myoldmopar/decent_ci.svg?branch=master)](https://travis-ci.org/Myoldmopar/decent_ci)
+[![RuboCop](https://github.com/Myoldmopar/decent_ci/actions/workflows/rubocop.yml/badge.svg)](https://github.com/Myoldmopar/decent_ci/actions/workflows/rubocop.yml)
+[![Unit Tests](https://github.com/Myoldmopar/decent_ci/actions/workflows/test.yml/badge.svg)](https://github.com/Myoldmopar/decent_ci/actions/workflows/test.yml)
 [![Coverage Status](https://coveralls.io/repos/github/Myoldmopar/decent_ci/badge.svg?branch=master)](https://coveralls.io/github/Myoldmopar/decent_ci?branch=master)
 [![Maintainability](https://api.codeclimate.com/v1/badges/2ec29367c38e431d4b8a/maintainability)](https://codeclimate.com/github/Myoldmopar/decent_ci/maintainability)
 
@@ -9,14 +10,14 @@ Forked from https://github.com/lefticus/decent_ci, tailored to [EnergyPlus ](htt
 
 Decent CI is a decentralized continuous integration system for cmake based projects designed for use with github.
 
-It queries a given repository for a the set of branches, releases and pull request. The project is written in ruby and requires:
+It queries a given repository for a the set of branches and pull requests. The project is written in ruby and requires:
 
 - ruby
   - octokit gem
   - activesupport gem
 - git
 
-To configure your application for use with Decent CI, you need put approriate `.decent_ci*.yml` files in the root of your project. Only branches / tags which contain the required files will be tested.
+To configure your application for use with Decent CI, you need put appropriate `.decent_ci*.yml` files in the root of your project. Only branches which contain the required files will be tested.
 
 Examples can be found in the [confs](confs) folder.
 

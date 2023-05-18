@@ -91,11 +91,7 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>tools for loading and parsing of yaml config files and filling in the
-details.  A minimal merged config should at least define the compiler. 
-Individual setup* functions in this module will raise Exceptions for
-invalid conditions, while blanks will be applied if it is a suitable
-default.</p>
+<p>tools for loading and parsing of yaml config files and filling in the details.  A minimal merged config should at least define the compiler.  Individual setup* functions in this module will raise Exceptions for invalid conditions, while blanks will be applied if it is a suitable default.</p>
 
 
   </div>
@@ -228,31 +224,8 @@ default.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>returns a list of yaml-based configuration data sets they may be nil values
-if the yaml config couldn&#39;t be found by name.</p>
+<p>returns a list of yaml-based configuration data sets they may be nil values if the yaml config couldn&#39;t be found by name.</p>
 </div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#find_windows_6_release-instance_method" title="#find_windows_6_release (instance method)">#<strong>find_windows_6_release</strong>(ver_minor)  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -458,51 +431,7 @@ if the yaml config couldn&#39;t be found by name.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#setup_compiler_package_extension-instance_method" title="#setup_compiler_package_extension (instance method)">#<strong>setup_compiler_package_extension</strong>(compiler, package_generator)  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
       <a href="#setup_compiler_package_generator-instance_method" title="#setup_compiler_package_generator (instance method)">#<strong>setup_compiler_package_generator</strong>(compiler, os_name)  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#setup_compiler_package_mimetype-instance_method" title="#setup_compiler_package_mimetype (instance method)">#<strong>setup_compiler_package_mimetype</strong>(compiler)  &#x21d2; Object </a>
     
 
     
@@ -648,9 +577,7 @@ if the yaml config couldn&#39;t be found by name.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Cross-platform way of finding an executable in the $PATH.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -679,34 +606,34 @@ if the yaml config couldn&#39;t be found by name.</p>
       <pre class="lines">
 
 
-294
-295
-296
-297
-298
-299
-300
-301
-302
-303
-304
-305
-306
-307
-308
-309</pre>
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 294</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 254</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid__setup_cc_and_cxx'>_setup_cc_and_cxx</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='comma'>,</span> <span class='id identifier rubyid_cc_name'>cc_name</span><span class='comma'>,</span> <span class='id identifier rubyid_cxx_name'>cxx_name</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_potential_name'>potential_name</span> <span class='op'>=</span> <span class='id identifier rubyid_which'>which</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_cc_name'>cc_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:version</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-  <span class='kw'>if</span> <span class='op'>!</span><span class='id identifier rubyid_potential_name'>potential_name</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-    <span class='id identifier rubyid_cc_bin'>cc_bin</span> <span class='op'>=</span> <span class='id identifier rubyid_potential_name'>potential_name</span>
-    <span class='id identifier rubyid_cxx_bin'>cxx_bin</span> <span class='op'>=</span> <span class='id identifier rubyid_which'>which</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_cxx_name'>cxx_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:version</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-  <span class='kw'>else</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_potential_name'>potential_name</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
     <span class='id identifier rubyid_cc_bin'>cc_bin</span> <span class='op'>=</span> <span class='id identifier rubyid_which'>which</span><span class='lparen'>(</span><span class='id identifier rubyid_cc_name'>cc_name</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_cxx_bin'>cxx_bin</span> <span class='op'>=</span> <span class='id identifier rubyid_which'>which</span><span class='lparen'>(</span><span class='id identifier rubyid_cxx_name'>cxx_name</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_cc_bin'>cc_bin</span> <span class='op'>=</span> <span class='id identifier rubyid_potential_name'>potential_name</span>
+    <span class='id identifier rubyid_cxx_bin'>cxx_bin</span> <span class='op'>=</span> <span class='id identifier rubyid_which'>which</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_cxx_name'>cxx_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:version</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
   <span class='kw'>end</span>
 
   <span class='kw'>if</span> <span class='id identifier rubyid_cc_bin'>cc_bin</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>||</span> <span class='id identifier rubyid_cxx_bin'>cxx_bin</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>||</span> <span class='lparen'>(</span><span class='backtick'>`</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_cc_bin'>cc_bin</span><span class='embexpr_end'>}</span><span class='tstring_content'> --version</span><span class='tstring_end'>`</span></span> <span class='op'>!~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>.*</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:version</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span> <span class='op'>||</span> <span class='lparen'>(</span><span class='backtick'>`</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_cxx_bin'>cxx_bin</span><span class='embexpr_end'>}</span><span class='tstring_content'> --version</span><span class='tstring_end'>`</span></span> <span class='op'>!~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>.*</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:version</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span>
@@ -735,6 +662,18 @@ if the yaml config couldn&#39;t be found by name.</p>
       <pre class="lines">
 
 
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
 128
 129
 130
@@ -743,22 +682,10 @@ if the yaml config couldn&#39;t be found by name.</p>
 133
 134
 135
-136
-137
-138
-139
-140
-141
-142
-143
-144
-145
-146
-147
-148</pre>
+136</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 128</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 116</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_establish_base_configuration'>establish_base_configuration</span><span class='lparen'>(</span><span class='id identifier rubyid_os_version'>os_version</span><span class='comma'>,</span> <span class='id identifier rubyid_os_release'>os_release</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_cmake_paths'>cmake_paths</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>C:\\Program Files\\CMake\\bin</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
@@ -812,46 +739,56 @@ if the yaml config couldn&#39;t be found by name.</p>
       <pre class="lines">
 
 
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
 98
 99
 100
 101
 102
 103
-104
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116</pre>
+104</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 98</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 81</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_establish_os_characteristics'>establish_os_characteristics</span>
-  <span class='kw'>if</span> <span class='const'>RUBY_PLATFORM</span><span class='period'>.</span><span class='id identifier rubyid_match?'>match?</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>darwin</span><span class='regexp_end'>/i</span></span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_establish_os_characteristics'>establish_os_characteristics</span>  <span class='comment'># if RUBY_VERSION[0..2].to_f &lt; 2.4
+</span>  <span class='comment'># we must not use match?, it isn&#39;t available...
+</span>  <span class='comment'># for now I&#39;ll just try to use without ? everywhere, we&#39;ll see
+</span>  <span class='comment'># end
+</span>
+  <span class='kw'>case</span> <span class='const'>RUBY_PLATFORM</span>
+  <span class='kw'>when</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>darwin</span><span class='regexp_end'>/i</span></span>
     <span class='id identifier rubyid_os_distribution'>os_distribution</span> <span class='op'>=</span> <span class='kw'>nil</span>
     <span class='id identifier rubyid_os_version'>os_version</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>MacOS</span><span class='tstring_end'>&#39;</span></span>
     <span class='id identifier rubyid_ver_string'>ver_string</span> <span class='op'>=</span> <span class='backtick'>`</span><span class='tstring_content'>uname -v</span><span class='tstring_end'>`</span></span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span>
-    <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>.* Version (?&lt;ver_major&gt;[0-9]+)\.([0-9]+)\.([0-9]+).*:.*</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_ver_string'>ver_string</span>
-    <span class='comment'># the darwin version number - 4 = the point release of macosx
-</span>    <span class='id identifier rubyid_os_release'>os_release</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>10.</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_ver_major'>ver_major</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span> <span class='op'>-</span> <span class='int'>4</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
-  <span class='kw'>elsif</span> <span class='const'>RUBY_PLATFORM</span><span class='period'>.</span><span class='id identifier rubyid_match?'>match?</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>linux</span><span class='regexp_end'>/i</span></span><span class='rparen'>)</span>
+    <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>.* Version (?&lt;ver_major&gt;[0-9]+)\.([0-9]+)\.([0-9]+).*:.*</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_ver_string'>ver_string</span>    <span class='comment'># the darwin version number - 4 = the point release of macosx
+</span>
+    <span class='id identifier rubyid_os_release'>os_release</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>10.</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_ver_major'>ver_major</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span> <span class='op'>-</span> <span class='int'>4</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>when</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>linux</span><span class='regexp_end'>/i</span></span>
     <span class='id identifier rubyid_os_distribution'>os_distribution</span> <span class='op'>=</span> <span class='backtick'>`</span><span class='tstring_content'>lsb_release -is</span><span class='tstring_end'>`</span></span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span>
     <span class='id identifier rubyid_os_version'>os_version</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Linux</span><span class='tstring_end'>&#39;</span></span>
     <span class='id identifier rubyid_os_release'>os_release</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='backtick'>`</span><span class='tstring_content'>lsb_release -is</span><span class='tstring_end'>`</span></span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='backtick'>`</span><span class='tstring_content'>lsb_release -rs</span><span class='tstring_end'>`</span></span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
   <span class='kw'>else</span>
     <span class='comment'># :nocov: Not testing on windows right now
-</span>    <span class='id identifier rubyid_os_distribution'>os_distribution</span><span class='comma'>,</span> <span class='id identifier rubyid_os_version'>os_version</span><span class='comma'>,</span> <span class='id identifier rubyid_os_release'>os_release</span> <span class='op'>=</span> <span class='id identifier rubyid_establish_windows_characteristics'>establish_windows_characteristics</span>
-    <span class='comment'># :nocov:
-</span>  <span class='kw'>end</span>
+</span>    <span class='id identifier rubyid_os_distribution'>os_distribution</span><span class='comma'>,</span> <span class='id identifier rubyid_os_version'>os_version</span><span class='comma'>,</span> <span class='id identifier rubyid_os_release'>os_release</span> <span class='op'>=</span> <span class='id identifier rubyid_establish_windows_characteristics'>establish_windows_characteristics</span>    <span class='comment'># :nocov:
+</span>
+  <span class='kw'>end</span>
   <span class='lbracket'>[</span><span class='id identifier rubyid_os_distribution'>os_distribution</span><span class='comma'>,</span> <span class='id identifier rubyid_os_version'>os_version</span><span class='comma'>,</span> <span class='id identifier rubyid_os_release'>os_release</span><span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -885,33 +822,25 @@ if the yaml config couldn&#39;t be found by name.</p>
       <pre class="lines">
 
 
-83
-84
-85
-86
-87
-88
-89
-90
-91
-92
-93
-94
-95</pre>
+70
+71
+72
+73
+74
+75
+76
+77
+78</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 83</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 70</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_establish_windows_characteristics'>establish_windows_characteristics</span>
   <span class='id identifier rubyid_os_version'>os_version</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Windows</span><span class='tstring_end'>&#39;</span></span>
   <span class='id identifier rubyid_ver_string'>ver_string</span> <span class='op'>=</span> <span class='backtick'>`</span><span class='tstring_content'>cmd /c ver</span><span class='tstring_end'>`</span></span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span>
   <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>.* \[Version (?&lt;ver_major&gt;[0-9]+)\.(?&lt;ver_minor&gt;[0-9]+)\..*\]</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_ver_string'>ver_string</span>
   <span class='id identifier rubyid_os_release'>os_release</span> <span class='op'>=</span> <span class='kw'>nil</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_ver_major'>ver_major</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span> <span class='op'>==</span> <span class='int'>6</span>
-    <span class='id identifier rubyid_os_release'>os_release</span> <span class='op'>=</span> <span class='id identifier rubyid_find_windows_6_release'>find_windows_6_release</span><span class='lparen'>(</span><span class='id identifier rubyid_ver_minor'>ver_minor</span><span class='rparen'>)</span>
-  <span class='kw'>elsif</span> <span class='id identifier rubyid_ver_major'>ver_major</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span> <span class='op'>==</span> <span class='int'>10</span>
-    <span class='id identifier rubyid_os_release'>os_release</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>10</span><span class='tstring_end'>&#39;</span></span>
-  <span class='kw'>end</span>
+  <span class='id identifier rubyid_os_release'>os_release</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>10</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_ver_major'>ver_major</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span> <span class='op'>==</span> <span class='int'>10</span>
   <span class='id identifier rubyid_os_release'>os_release</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Unknown-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_ver_major'>ver_major</span><span class='embexpr_end'>}</span><span class='tstring_content'>.</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_ver_minor'>ver_minor</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_os_release'>os_release</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
   <span class='lbracket'>[</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_os_version'>os_version</span><span class='comma'>,</span> <span class='id identifier rubyid_os_release'>os_release</span><span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
@@ -932,8 +861,7 @@ if the yaml config couldn&#39;t be found by name.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>returns a list of yaml-based configuration data sets they may be nil values
-if the yaml config couldn&#39;t be found by name</p>
+<p>returns a list of yaml-based configuration data sets they may be nil values if the yaml config couldn&#39;t be found by name</p>
 
 
   </div>
@@ -947,17 +875,17 @@ if the yaml config couldn&#39;t be found by name</p>
       <pre class="lines">
 
 
-152
-153
-154
-155
-156
-157
-158
-159</pre>
+140
+141
+142
+143
+144
+145
+146
+147</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 152</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 140</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_find_valid_yaml_files'>find_valid_yaml_files</span><span class='lparen'>(</span><span class='id identifier rubyid_all_yaml_names'>all_yaml_names</span><span class='comma'>,</span> <span class='id identifier rubyid_location'>location</span><span class='comma'>,</span> <span class='id identifier rubyid_ref'>ref</span><span class='comma'>,</span> <span class='id identifier rubyid_fileset'>fileset</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_valid_yaml_configs'>valid_yaml_configs</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -966,48 +894,6 @@ if the yaml config couldn&#39;t be found by name</p>
     <span class='id identifier rubyid_valid_yaml_configs'>valid_yaml_configs</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_attempted_yaml'>attempted_yaml</span> <span class='kw'>if</span> <span class='id identifier rubyid_fileset'>fileset</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='id identifier rubyid_yaml'>yaml</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
   <span class='id identifier rubyid_valid_yaml_configs'>valid_yaml_configs</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="find_windows_6_release-instance_method">
-  
-    #<strong>find_windows_6_release</strong>(ver_minor)  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-72
-73
-74
-75
-76
-77
-78
-79
-80</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 72</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_find_windows_6_release'>find_windows_6_release</span><span class='lparen'>(</span><span class='id identifier rubyid_ver_minor'>ver_minor</span><span class='rparen'>)</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_ver_minor'>ver_minor</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span> <span class='op'>==</span> <span class='int'>1</span>
-    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>7</span><span class='tstring_end'>&#39;</span></span>
-  <span class='kw'>elsif</span> <span class='id identifier rubyid_ver_minor'>ver_minor</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span> <span class='op'>==</span> <span class='int'>2</span>
-    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>8</span><span class='tstring_end'>&#39;</span></span>
-  <span class='kw'>elsif</span> <span class='id identifier rubyid_ver_minor'>ver_minor</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span> <span class='op'>==</span> <span class='int'>3</span>
-    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>8.1</span><span class='tstring_end'>&#39;</span></span>
-  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1029,18 +915,18 @@ if the yaml config couldn&#39;t be found by name</p>
       <pre class="lines">
 
 
-118
-119
-120
-121
-122
-123
-124
-125
-126</pre>
+106
+107
+108
+109
+110
+111
+112
+113
+114</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 118</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 106</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_get_all_yaml_names'>get_all_yaml_names</span><span class='lparen'>(</span><span class='id identifier rubyid_os_version'>os_version</span><span class='comma'>,</span> <span class='id identifier rubyid_os_release'>os_release</span><span class='comma'>,</span> <span class='id identifier rubyid_os_distribution'>os_distribution</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_yaml_base_name'>yaml_base_name</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>.decent_ci</span><span class='tstring_end'>&#39;</span></span>
@@ -1093,47 +979,47 @@ if the yaml config couldn&#39;t be found by name</p>
       <pre class="lines">
 
 
-356
-357
-358
-359
-360
-361
-362
-363
-364
-365
-366
-367
-368
-369
-370
-371
-372
-373
-374
-375
-376
-377
-378
-379
-380
-381
-382
-383
-384
-385
-386
-387
-388
-389
-390
-391
-392
-393</pre>
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 356</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 315</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_load_configuration'>load_configuration</span><span class='lparen'>(</span><span class='id identifier rubyid_location'>location</span><span class='comma'>,</span> <span class='id identifier rubyid_ref'>ref</span><span class='comma'>,</span> <span class='id identifier rubyid_is_release'>is_release</span><span class='rparen'>)</span>
   <span class='comment'># first get a list of all decent_ci files found at the root of the repo, and raise if none were found
@@ -1214,11 +1100,7 @@ if the yaml config couldn&#39;t be found by name</p>
 48
 49
 50
-51
-52
-53
-54
-55</pre>
+51</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 30</span>
@@ -1230,13 +1112,9 @@ if the yaml config couldn&#39;t be found by name</p>
     <span class='id identifier rubyid_content'>content</span> <span class='op'>=</span> <span class='ivar'>@client</span><span class='period'>.</span><span class='id identifier rubyid_content'>content</span><span class='lparen'>(</span><span class='id identifier rubyid_this_location'>this_location</span><span class='comma'>,</span> <span class='symbol'>:path</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='symbol'>:ref</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_this_ref'>this_ref</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_contents'>contents</span> <span class='op'>=</span> <span class='id identifier rubyid_content'>content</span><span class='period'>.</span><span class='id identifier rubyid_content'>content</span>
     <span class='id identifier rubyid_return_value'>return_value</span> <span class='op'>=</span> <span class='const'>YAML</span><span class='period'>.</span><span class='id identifier rubyid_load'>load</span><span class='lparen'>(</span><span class='const'>Base64</span><span class='period'>.</span><span class='id identifier rubyid_decode64'>decode64</span><span class='lparen'>(</span><span class='id identifier rubyid_contents'>contents</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span><span class='rparen'>)</span>
-  <span class='kw'>rescue</span> <span class='const'>Psych</span><span class='op'>::</span><span class='const'>SyntaxError</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
+  <span class='kw'>rescue</span> <span class='const'>Psych</span><span class='op'>::</span><span class='const'>SyntaxError</span><span class='comma'>,</span> <span class='const'>SyntaxError</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
     <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_e'>e</span><span class='period'>.</span><span class='id identifier rubyid_message'>message</span><span class='embexpr_end'>}</span><span class='tstring_content'> while parsing </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>@</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_this_ref'>this_ref</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
-  <span class='kw'>rescue</span> <span class='const'>SyntaxError</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
-    <span class='comment'># :nocov: I don&#39;t think we can get to this, it&#39;s always a Psych::SyntaxError, but I&#39;m not 100% sure, so leaving this
-</span>    <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_e'>e</span><span class='period'>.</span><span class='id identifier rubyid_message'>message</span><span class='embexpr_end'>}</span><span class='tstring_content'> while parsing </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>@</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_this_ref'>this_ref</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
-    <span class='comment'># :nocov:
-</span>  <span class='kw'>rescue</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
+  <span class='kw'>rescue</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_e'>e</span>
     <span class='gvar'>$logger</span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Unable to load yaml file from repository: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_this_location'>this_location</span><span class='embexpr_end'>}</span><span class='tstring_content'>/</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_name'>name</span><span class='embexpr_end'>}</span><span class='tstring_content'>@</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_this_ref'>this_ref</span><span class='embexpr_end'>}</span><span class='tstring_content'> error: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_e'>e</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
     <span class='id identifier rubyid_path'>path</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_expand_path'>expand_path</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_this_location'>this_location</span><span class='rparen'>)</span>
     <span class='gvar'>$logger</span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Attempting to load yaml config file: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_path'>path</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -1269,18 +1147,18 @@ if the yaml config couldn&#39;t be found by name</p>
       <pre class="lines">
 
 
-161
-162
-163
-164
-165
-166
-167
-168
-169</pre>
+149
+150
+151
+152
+153
+154
+155
+156
+157</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 161</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 149</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_setup_compiler_architecture'>setup_compiler_architecture</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:architecture</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:architecture</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1311,23 +1189,23 @@ if the yaml config couldn&#39;t be found by name</p>
       <pre class="lines">
 
 
-274
-275
-276
-277
-278
-279
-280
-281
-282</pre>
+234
+235
+236
+237
+238
+239
+240
+241
+242</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 274</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 234</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_setup_compiler_build_generator'>setup_compiler_build_generator</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:build_generator</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:build_generator</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
 
-  <span class='kw'>if</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_match?'>match?</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>.*Visual Studio.*</span><span class='regexp_end'>/i</span></span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>.*Visual Studio.*</span><span class='regexp_end'>/i</span></span><span class='rparen'>)</span>
     <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Visual Studio 16 2019</span><span class='tstring_end'>&#39;</span></span>
   <span class='kw'>else</span>
     <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Unix Makefiles</span><span class='tstring_end'>&#39;</span></span>
@@ -1353,22 +1231,22 @@ if the yaml config couldn&#39;t be found by name</p>
       <pre class="lines">
 
 
-260
-261
-262
-263
-264
-265
-266
-267
-268
-269
-270
-271
-272</pre>
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 260</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 220</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_setup_compiler_cppcheck_bin'>setup_compiler_cppcheck_bin</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='comma'>,</span> <span class='id identifier rubyid_version'>version</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:cppcheck_bin</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:cppcheck_bin</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1403,16 +1281,16 @@ if the yaml config couldn&#39;t be found by name</p>
       <pre class="lines">
 
 
-190
-191
-192
-193
-194
-195
-196</pre>
+178
+179
+180
+181
+182
+183
+184</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 190</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 178</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_setup_compiler_description'>setup_compiler_description</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Compiler name not specified, must at least specify name</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1441,18 +1319,18 @@ if the yaml config couldn&#39;t be found by name</p>
       <pre class="lines">
 
 
-242
-243
-244
-245
-246
-247
-248
-249
-250</pre>
+202
+203
+204
+205
+206
+207
+208
+209
+210</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 242</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 202</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_setup_compiler_extra_flags'>setup_compiler_extra_flags</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='comma'>,</span> <span class='id identifier rubyid_is_release'>is_release</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_is_release'>is_release</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:cmake_extra_flags_release</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1483,16 +1361,16 @@ if the yaml config couldn&#39;t be found by name</p>
       <pre class="lines">
 
 
-252
-253
-254
-255
-256
-257
-258</pre>
+212
+213
+214
+215
+216
+217
+218</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 252</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 212</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_setup_compiler_num_processors'>setup_compiler_num_processors</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:num_parallel_builds</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:num_parallel_builds</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1500,66 +1378,6 @@ if the yaml config couldn&#39;t be found by name</p>
   <span class='id identifier rubyid_num_processors'>num_processors</span> <span class='op'>=</span> <span class='id identifier rubyid_processor_count'><span class='object_link'><a href="top-level-namespace.html#processor_count-instance_method" title="#processor_count (method)">processor_count</a></span></span>
   <span class='id identifier rubyid_num_processors'>num_processors</span> <span class='op'>-=</span> <span class='int'>1</span> <span class='kw'>if</span> <span class='id identifier rubyid_num_processors'>num_processors</span> <span class='op'>&gt;</span> <span class='int'>2</span>
   <span class='id identifier rubyid_num_processors'>num_processors</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="setup_compiler_package_extension-instance_method">
-  
-    #<strong>setup_compiler_package_extension</strong>(compiler, package_generator)  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-214
-215
-216
-217
-218
-219
-220
-221
-222
-223
-224
-225
-226
-227
-228
-229
-230
-231</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 214</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_setup_compiler_package_extension'>setup_compiler_package_extension</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='comma'>,</span> <span class='id identifier rubyid_package_generator'>package_generator</span><span class='rparen'>)</span>
-  <span class='kw'>return</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:package_extension</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:package_extension</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-
-  <span class='kw'>case</span> <span class='id identifier rubyid_package_generator'>package_generator</span>
-  <span class='kw'>when</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>.*NSIS.*</span><span class='regexp_end'>/</span></span>
-    <span class='id identifier rubyid_extension'>extension</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>exe</span><span class='tstring_end'>&#39;</span></span>
-  <span class='kw'>when</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>.*IFW.*</span><span class='regexp_end'>/</span></span>
-    <span class='id identifier rubyid_extension'>extension</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>dmg</span><span class='tstring_end'>&#39;</span></span>
-  <span class='kw'>when</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>.*STGZ.*</span><span class='regexp_end'>/</span></span>
-    <span class='id identifier rubyid_extension'>extension</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>sh</span><span class='tstring_end'>&#39;</span></span>
-  <span class='kw'>when</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>T.*</span><span class='regexp_end'>/</span></span>
-    <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>T(?&lt;tar_type&gt;[A-Z]+)</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='id identifier rubyid_package_generator'>package_generator</span>
-    <span class='id identifier rubyid_extension'>extension</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>tar.</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_tar_type'>tar_type</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>  <span class='comment'># TGZ, e.g.
-</span>  <span class='kw'>else</span>
-    <span class='id identifier rubyid_extension'>extension</span> <span class='op'>=</span> <span class='id identifier rubyid_package_generator'>package_generator</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span>  <span class='comment'># ZIP, e.g.
-</span>  <span class='kw'>end</span>
-  <span class='id identifier rubyid_extension'>extension</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1581,24 +1399,24 @@ if the yaml config couldn&#39;t be found by name</p>
       <pre class="lines">
 
 
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
 198
 199
-200
-201
-202
-203
-204
-205
-206
-207
-208
-209
-210
-211
-212</pre>
+200</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 198</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 186</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_setup_compiler_package_generator'>setup_compiler_package_generator</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='comma'>,</span> <span class='id identifier rubyid_os_name'>os_name</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:build_package_generator</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:build_package_generator</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1621,46 +1439,6 @@ if the yaml config couldn&#39;t be found by name</p>
 </div>
     
       <div class="method_details ">
-  <h3 class="signature " id="setup_compiler_package_mimetype-instance_method">
-  
-    #<strong>setup_compiler_package_mimetype</strong>(compiler)  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-233
-234
-235
-236
-237
-238
-239
-240</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 233</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_setup_compiler_package_mimetype'>setup_compiler_package_mimetype</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
-  <span class='kw'>case</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:package_extension</span><span class='rbracket'>]</span>
-  <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DEB</span><span class='tstring_end'>&#39;</span></span>
-    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>application/x-deb</span><span class='tstring_end'>&#39;</span></span>
-  <span class='kw'>else</span>
-    <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>application/octet-stream</span><span class='tstring_end'>&#39;</span></span>
-  <span class='kw'>end</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
   <h3 class="signature " id="setup_compiler_target_arch-instance_method">
   
     #<strong>setup_compiler_target_arch</strong>(compiler)  &#x21d2; <tt>Object</tt> 
@@ -1675,23 +1453,23 @@ if the yaml config couldn&#39;t be found by name</p>
       <pre class="lines">
 
 
-284
-285
-286
-287
-288
-289
-290
-291
-292</pre>
+244
+245
+246
+247
+248
+249
+250
+251
+252</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 284</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 244</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_setup_compiler_target_arch'>setup_compiler_target_arch</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_match?'>match?</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>.*Visual Studio.*</span><span class='regexp_end'>/i</span></span><span class='rparen'>)</span>
-    <span class='comment'># Visual Studio 2019+ generator behaves slightly different, need to add -A
-</span>    <span class='kw'>return</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>x64</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='op'>!</span><span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:architecture</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:architecture</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_match?'>match?</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>.*64.*</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>.*Visual Studio.*</span><span class='regexp_end'>/i</span></span><span class='rparen'>)</span>    <span class='comment'># Visual Studio 2019+ generator behaves slightly different, need to add -A
+</span>
+    <span class='kw'>return</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>x64</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='op'>!</span><span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:architecture</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>&amp;&amp;</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:architecture</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>.*64.*</span><span class='regexp_end'>/</span></span><span class='rparen'>)</span>
 
     <span class='kw'>return</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Win32</span><span class='tstring_end'>&#39;</span></span>
   <span class='kw'>end</span>
@@ -1717,27 +1495,27 @@ if the yaml config couldn&#39;t be found by name</p>
       <pre class="lines">
 
 
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
 171
 172
 173
 174
 175
-176
-177
-178
-179
-180
-181
-182
-183
-184
-185
-186
-187
-188</pre>
+176</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 171</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 159</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_setup_compiler_version'>setup_compiler_version</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:version</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:version</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1747,12 +1525,12 @@ if the yaml config couldn&#39;t be found by name</p>
     <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Version number for visual studio must be provided</span><span class='tstring_end'>&#39;</span></span>
   <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>clang</span><span class='tstring_end'>&#39;</span></span>
     <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>.*clang version (?&lt;version&gt;([0-9]+\.?)+).*</span><span class='regexp_end'>/</span></span> <span class='op'>=~</span> <span class='backtick'>`</span><span class='tstring_content'>clang --version</span><span class='tstring_end'>`</span></span>
-    <span class='kw'>return</span> <span class='id identifier rubyid_version'>version</span>
+    <span class='id identifier rubyid_version'>version</span>
   <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>gcc</span><span class='tstring_end'>&#39;</span></span>
-    <span class='kw'>return</span> <span class='backtick'>`</span><span class='tstring_content'>gcc -dumpversion</span><span class='tstring_end'>`</span></span>
-  <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>cppcheck</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>custom_check</span><span class='tstring_end'>&#39;</span></span>
-    <span class='comment'># we can actually leave the version nil for cppcheck, it will allow a version-agnostic spec
-</span>    <span class='kw'>return</span> <span class='kw'>nil</span>
+    <span class='backtick'>`</span><span class='tstring_content'>gcc -dumpversion</span><span class='tstring_end'>`</span></span>
+  <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>cppcheck</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>custom_check</span><span class='tstring_end'>&#39;</span></span>    <span class='comment'># we can actually leave the version nil for cppcheck, it will allow a version-agnostic spec
+</span>
+    <span class='kw'>nil</span>
   <span class='kw'>else</span>
     <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Invalid compiler specified, must be one of clang, gcc, custom_check, cppcheck, or a variation on &quot;Visual Studio VV YYYY&quot;</span><span class='tstring_end'>&#39;</span></span>
   <span class='kw'>end</span>
@@ -1777,22 +1555,22 @@ if the yaml config couldn&#39;t be found by name</p>
       <pre class="lines">
 
 
-311
-312
-313
-314
-315
-316
-317
-318
-319
-320
-321
-322
-323</pre>
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 311</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 271</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_setup_gcc_style_cc_and_cxx'>setup_gcc_style_cc_and_cxx</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='lbracket'>[</span><span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:cc_bin</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:cxx_bin</span><span class='rbracket'>]</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:cc_bin</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>||</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:cxx_bin</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1849,39 +1627,38 @@ if the yaml config couldn&#39;t be found by name</p>
       <pre class="lines">
 
 
-325
-326
-327
-328
-329
-330
-331
-332
-333
-334
-335
-336
-337
-338
-339
-340
-341
-342
-343
-344
-345
-346
-347
-348
-349
-350
-351
-352
-353
-354</pre>
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 325</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 285</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_setup_single_compiler'>setup_single_compiler</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='comma'>,</span> <span class='id identifier rubyid_is_release'>is_release</span><span class='comma'>,</span> <span class='id identifier rubyid_os_version'>os_version</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:architecture</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_setup_compiler_architecture'>setup_compiler_architecture</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
@@ -1897,8 +1674,7 @@ if the yaml config couldn&#39;t be found by name</p>
   <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:build_type</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Release</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:build_type</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>||</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:build_type</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
   <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:build_generator</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_setup_compiler_build_generator'>setup_compiler_build_generator</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:target_arch</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_setup_compiler_target_arch'>setup_compiler_target_arch</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:package_extension</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_setup_compiler_package_extension'>setup_compiler_package_extension</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='comma'>,</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:build_package_generator</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:package_mimetype</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_setup_compiler_package_mimetype'>setup_compiler_package_mimetype</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:package_mimetype</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>application/octet-stream</span><span class='tstring_end'>&#39;</span></span>
   <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:skip_regression</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:skip_regression</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
   <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:collect_performance_results</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:collect_performance_results</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
   <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:ctest_filter</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:ctest_filter</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1933,6 +1709,10 @@ if the yaml config couldn&#39;t be found by name</p>
       <pre class="lines">
 
 
+53
+54
+55
+56
 57
 58
 59
@@ -1943,20 +1723,18 @@ if the yaml config couldn&#39;t be found by name</p>
 64
 65
 66
-67
-68
-69
-70</pre>
+67</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 57</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 53</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_symbolize'>symbolize</span><span class='lparen'>(</span><span class='id identifier rubyid_obj'>obj</span><span class='rparen'>)</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_obj'>obj</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Hash</span>
+  <span class='kw'>case</span> <span class='id identifier rubyid_obj'>obj</span>
+  <span class='kw'>when</span> <span class='const'>Hash</span>
     <span class='id identifier rubyid_obj'>obj</span><span class='period'>.</span><span class='id identifier rubyid_reduce'>reduce</span><span class='lparen'>(</span><span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_memo'>memo</span><span class='comma'>,</span> <span class='lparen'>(</span><span class='id identifier rubyid_k'>k</span><span class='comma'>,</span> <span class='id identifier rubyid_v'>v</span><span class='rparen'>)</span><span class='op'>|</span>
       <span class='id identifier rubyid_memo'>memo</span><span class='period'>.</span><span class='id identifier rubyid_tap'>tap</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_m'>m</span><span class='op'>|</span> <span class='id identifier rubyid_m'>m</span><span class='lbracket'>[</span><span class='id identifier rubyid_k'>k</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_symbolize'>symbolize</span><span class='lparen'>(</span><span class='id identifier rubyid_v'>v</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
     <span class='kw'>end</span>
-  <span class='kw'>elsif</span> <span class='id identifier rubyid_obj'>obj</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Array</span>
+  <span class='kw'>when</span> <span class='const'>Array</span>
     <span class='id identifier rubyid_obj'>obj</span><span class='period'>.</span><span class='id identifier rubyid_reduce'>reduce</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_memo'>memo</span><span class='comma'>,</span> <span class='id identifier rubyid_v'>v</span><span class='op'>|</span>
       <span class='id identifier rubyid_memo'>memo</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_symbolize'>symbolize</span><span class='lparen'>(</span><span class='id identifier rubyid_v'>v</span><span class='rparen'>)</span>
       <span class='id identifier rubyid_memo'>memo</span>
@@ -1979,21 +1757,7 @@ if the yaml config couldn&#39;t be found by name</p>
   
 
   
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Cross-platform way of finding an executable in the $PATH.</p>
-
-<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_which'>which</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ruby</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='comment'>#=&gt; /usr/bin/ruby
-</span></code></pre>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-
-</div><table class="source_code">
+</h3><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
@@ -2019,7 +1783,7 @@ if the yaml config couldn&#39;t be found by name</p>
 <span class='kw'>def</span> <span class='id identifier rubyid_which'>which</span><span class='lparen'>(</span><span class='id identifier rubyid_cmd'>cmd</span><span class='comma'>,</span> <span class='id identifier rubyid_extra_paths'>extra_paths</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_exts'>exts</span> <span class='op'>=</span> <span class='const'>ENV</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>PATHEXT</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span> <span class='op'>?</span> <span class='const'>ENV</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>PATHEXT</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span> <span class='op'>:</span> <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
   <span class='id identifier rubyid_path_array'>path_array</span> <span class='op'>=</span> <span class='const'>ENV</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>PATH</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='const'>File</span><span class='op'>::</span><span class='const'>PATH_SEPARATOR</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_path_array'>path_array</span> <span class='op'>=</span> <span class='id identifier rubyid_path_array'>path_array</span><span class='period'>.</span><span class='id identifier rubyid_concat'>concat</span><span class='lparen'>(</span><span class='id identifier rubyid_extra_paths'>extra_paths</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_extra_paths'>extra_paths</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_path_array'>path_array</span><span class='period'>.</span><span class='id identifier rubyid_concat'>concat</span><span class='lparen'>(</span><span class='id identifier rubyid_extra_paths'>extra_paths</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_extra_paths'>extra_paths</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
 
   <span class='id identifier rubyid_path_array'>path_array</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_path'>path</span><span class='op'>|</span>
     <span class='id identifier rubyid_exts'>exts</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_ext'>ext</span><span class='op'>|</span>
@@ -2039,9 +1803,9 @@ if the yaml config couldn&#39;t be found by name</p>
 </div>
 
       <div id="footer">
-  Generated on Wed May 29 12:01:52 2019 by
+  Generated on Thu May 18 09:42:02 2023 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.19 (ruby-2.5.1).
+  0.9.19 (ruby-2.7.0).
 </div>
 
     </div>
