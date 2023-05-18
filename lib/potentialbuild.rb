@@ -130,10 +130,6 @@ class PotentialBuild
     "#{@config.repository_name}-#{compiler[:architecture]}-#{@config.os}-#{@buildid}"
   end
 
-  def needs_release_package(compiler)
-    true
-  end
-
   def checkout(src_dir)
     # TODO: update this to be a merge, not just a checkout of the pull request branch
     FileUtils.mkdir_p src_dir

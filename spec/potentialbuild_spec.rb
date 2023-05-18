@@ -17,7 +17,6 @@ end
 
 describe 'PotentialBuild Testing' do
   include ResultsProcessor
-  include CustomCheck
   context 'when doing simple construction' do
     it 'should succeed at construction' do
       allow_any_instance_of(Octokit::Client).to receive(:content).and_return([PotentialBuildNamedDummy.new('.decent_ci.yaml')])

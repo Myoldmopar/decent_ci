@@ -248,7 +248,7 @@ module Configuration
     [cc_bin, cxx_bin]
   end
 
-  def setup_single_compiler(compiler, is_release, os_version)
+  def setup_single_compiler(compiler, is_release)
     compiler[:architecture] = setup_compiler_architecture(compiler)
     compiler[:version] = setup_compiler_version(compiler)
     compiler[:cc_bin], compiler[:cxx_bin] = setup_gcc_style_cc_and_cxx(compiler)
@@ -301,7 +301,7 @@ module Configuration
     # loop over all compilers and fill in defaults and check for erroneous conditions
     configuration.compilers.each do |compiler|
       $logger.debug("Working on compiler: #{compiler[:name]}")
-      setup_single_compiler(compiler, is_release, configuration[:os])
+      setup_single_compiler(compiler, is_release)
     end
 
     # do final touchups on the configuration

@@ -337,7 +337,7 @@ describe 'Configuration Testing' do
 
     end
     it 'should accept a compiler with the minimal fields' do
-      filled_compiler = setup_single_compiler({:name => "gcc"}, false, 'Linux')
+      filled_compiler = setup_single_compiler({:name => "gcc"}, false)
       expect(filled_compiler).to include :cc_bin
       expect(filled_compiler).to include :cxx_bin
       expect(filled_compiler).to include :version
