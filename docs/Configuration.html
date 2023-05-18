@@ -343,28 +343,6 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#setup_compiler_cppcheck_bin-instance_method" title="#setup_compiler_cppcheck_bin (instance method)">#<strong>setup_compiler_cppcheck_bin</strong>(compiler, version)  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
       <a href="#setup_compiler_description-instance_method" title="#setup_compiler_description (instance method)">#<strong>setup_compiler_description</strong>(compiler)  &#x21d2; Object </a>
     
 
@@ -410,28 +388,6 @@
   <span class="summary_signature">
     
       <a href="#setup_compiler_num_processors-instance_method" title="#setup_compiler_num_processors (instance method)">#<strong>setup_compiler_num_processors</strong>(compiler)  &#x21d2; Object </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#setup_compiler_package_generator-instance_method" title="#setup_compiler_package_generator (instance method)">#<strong>setup_compiler_package_generator</strong>(compiler, os_name)  &#x21d2; Object </a>
     
 
     
@@ -519,7 +475,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#setup_single_compiler-instance_method" title="#setup_single_compiler (instance method)">#<strong>setup_single_compiler</strong>(compiler, is_release, os_version)  &#x21d2; Object </a>
+      <a href="#setup_single_compiler-instance_method" title="#setup_single_compiler (instance method)">#<strong>setup_single_compiler</strong>(compiler, is_release)  &#x21d2; Object </a>
     
 
     
@@ -606,25 +562,25 @@
       <pre class="lines">
 
 
-254
-255
-256
-257
-258
-259
-260
-261
-262
-263
-264
-265
-266
-267
-268
-269</pre>
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 254</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 219</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid__setup_cc_and_cxx'>_setup_cc_and_cxx</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='comma'>,</span> <span class='id identifier rubyid_cc_name'>cc_name</span><span class='comma'>,</span> <span class='id identifier rubyid_cxx_name'>cxx_name</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_potential_name'>potential_name</span> <span class='op'>=</span> <span class='id identifier rubyid_which'>which</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_cc_name'>cc_name</span><span class='embexpr_end'>}</span><span class='tstring_content'>-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:version</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
@@ -680,9 +636,7 @@
 131
 132
 133
-134
-135
-136</pre>
+134</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 116</span>
@@ -702,10 +656,8 @@
     <span class='symbol'>:engine</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>cmake</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
     <span class='symbol'>:post_results_comment</span> <span class='op'>=&gt;</span> <span class='kw'>true</span><span class='comma'>,</span>
     <span class='symbol'>:post_results_status</span> <span class='op'>=&gt;</span> <span class='kw'>true</span><span class='comma'>,</span>
-    <span class='symbol'>:post_release_package</span> <span class='op'>=&gt;</span> <span class='kw'>true</span><span class='comma'>,</span>
     <span class='symbol'>:cmake_bin</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_which'>which</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>cmake</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_cmake_paths'>cmake_paths</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>\&quot;</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
-    <span class='symbol'>:ctest_bin</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_which'>which</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ctest</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_cmake_paths'>cmake_paths</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>\&quot;</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
-    <span class='symbol'>:cpack_bin</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_which'>which</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>cpack</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_cmake_paths'>cmake_paths</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>\&quot;</span><span class='tstring_end'>&quot;</span></span>
+    <span class='symbol'>:ctest_bin</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_which'>which</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ctest</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_cmake_paths'>cmake_paths</span><span class='rparen'>)</span><span class='embexpr_end'>}</span><span class='tstring_content'>\&quot;</span><span class='tstring_end'>&quot;</span></span>
   <span class='rbrace'>}</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -875,17 +827,17 @@
       <pre class="lines">
 
 
+138
+139
 140
 141
 142
 143
 144
-145
-146
-147</pre>
+145</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 140</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 138</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_find_valid_yaml_files'>find_valid_yaml_files</span><span class='lparen'>(</span><span class='id identifier rubyid_all_yaml_names'>all_yaml_names</span><span class='comma'>,</span> <span class='id identifier rubyid_location'>location</span><span class='comma'>,</span> <span class='id identifier rubyid_ref'>ref</span><span class='comma'>,</span> <span class='id identifier rubyid_fileset'>fileset</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_valid_yaml_configs'>valid_yaml_configs</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -979,47 +931,47 @@
       <pre class="lines">
 
 
-315
-316
-317
-318
-319
-320
-321
-322
-323
-324
-325
-326
-327
-328
-329
-330
-331
-332
-333
-334
-335
-336
-337
-338
-339
-340
-341
-342
-343
-344
-345
-346
-347
-348
-349
-350
-351
-352</pre>
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 315</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 276</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_load_configuration'>load_configuration</span><span class='lparen'>(</span><span class='id identifier rubyid_location'>location</span><span class='comma'>,</span> <span class='id identifier rubyid_ref'>ref</span><span class='comma'>,</span> <span class='id identifier rubyid_is_release'>is_release</span><span class='rparen'>)</span>
   <span class='comment'># first get a list of all decent_ci files found at the root of the repo, and raise if none were found
@@ -1048,7 +1000,7 @@
   <span class='comment'># loop over all compilers and fill in defaults and check for erroneous conditions
 </span>  <span class='id identifier rubyid_configuration'>configuration</span><span class='period'>.</span><span class='id identifier rubyid_compilers'>compilers</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_compiler'>compiler</span><span class='op'>|</span>
     <span class='gvar'>$logger</span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Working on compiler: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_setup_single_compiler'>setup_single_compiler</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='comma'>,</span> <span class='id identifier rubyid_is_release'>is_release</span><span class='comma'>,</span> <span class='id identifier rubyid_configuration'>configuration</span><span class='lbracket'>[</span><span class='symbol'>:os</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_setup_single_compiler'>setup_single_compiler</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='comma'>,</span> <span class='id identifier rubyid_is_release'>is_release</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
 
   <span class='comment'># do final touchups on the configuration
@@ -1147,18 +1099,18 @@
       <pre class="lines">
 
 
+147
+148
 149
 150
 151
 152
 153
 154
-155
-156
-157</pre>
+155</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 149</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 147</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_setup_compiler_architecture'>setup_compiler_architecture</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:architecture</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:architecture</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1189,18 +1141,18 @@
       <pre class="lines">
 
 
-234
-235
-236
-237
-238
-239
-240
-241
-242</pre>
+199
+200
+201
+202
+203
+204
+205
+206
+207</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 234</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 199</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_setup_compiler_build_generator'>setup_compiler_build_generator</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:build_generator</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:build_generator</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1210,56 +1162,6 @@
   <span class='kw'>else</span>
     <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Unix Makefiles</span><span class='tstring_end'>&#39;</span></span>
   <span class='kw'>end</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="setup_compiler_cppcheck_bin-instance_method">
-  
-    #<strong>setup_compiler_cppcheck_bin</strong>(compiler, version)  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-220
-221
-222
-223
-224
-225
-226
-227
-228
-229
-230
-231
-232</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 220</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_setup_compiler_cppcheck_bin'>setup_compiler_cppcheck_bin</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='comma'>,</span> <span class='id identifier rubyid_version'>version</span><span class='rparen'>)</span>
-  <span class='kw'>return</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:cppcheck_bin</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:cppcheck_bin</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-
-  <span class='kw'>if</span> <span class='id identifier rubyid_version'>version</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-    <span class='id identifier rubyid_potential_name'>potential_name</span> <span class='op'>=</span> <span class='id identifier rubyid_which'>which</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>cppcheck</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Unable to find a cppcheck binary (version agnostic)</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_potential_name'>potential_name</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-  <span class='kw'>else</span>
-    <span class='id identifier rubyid_potential_name'>potential_name</span> <span class='op'>=</span> <span class='id identifier rubyid_which'>which</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>cppcheck-</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_version'>version</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Unable to find binary for: cppcheck version </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_version'>version</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_potential_name'>potential_name</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-  <span class='kw'>end</span>
-
-  <span class='id identifier rubyid_potential_name'>potential_name</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1281,16 +1183,16 @@
       <pre class="lines">
 
 
+173
+174
+175
+176
+177
 178
-179
-180
-181
-182
-183
-184</pre>
+179</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 178</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 173</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_setup_compiler_description'>setup_compiler_description</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Compiler name not specified, must at least specify name</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1319,18 +1221,18 @@
       <pre class="lines">
 
 
-202
-203
-204
-205
-206
-207
-208
-209
-210</pre>
+181
+182
+183
+184
+185
+186
+187
+188
+189</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 202</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 181</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_setup_compiler_extra_flags'>setup_compiler_extra_flags</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='comma'>,</span> <span class='id identifier rubyid_is_release'>is_release</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_is_release'>is_release</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:cmake_extra_flags_release</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1361,16 +1263,16 @@
       <pre class="lines">
 
 
-212
-213
-214
-215
-216
-217
-218</pre>
+191
+192
+193
+194
+195
+196
+197</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 212</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 191</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_setup_compiler_num_processors'>setup_compiler_num_processors</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:num_parallel_builds</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:num_parallel_builds</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1378,60 +1280,6 @@
   <span class='id identifier rubyid_num_processors'>num_processors</span> <span class='op'>=</span> <span class='id identifier rubyid_processor_count'><span class='object_link'><a href="top-level-namespace.html#processor_count-instance_method" title="#processor_count (method)">processor_count</a></span></span>
   <span class='id identifier rubyid_num_processors'>num_processors</span> <span class='op'>-=</span> <span class='int'>1</span> <span class='kw'>if</span> <span class='id identifier rubyid_num_processors'>num_processors</span> <span class='op'>&gt;</span> <span class='int'>2</span>
   <span class='id identifier rubyid_num_processors'>num_processors</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="setup_compiler_package_generator-instance_method">
-  
-    #<strong>setup_compiler_package_generator</strong>(compiler, os_name)  &#x21d2; <tt>Object</tt> 
-  
-
-  
-
-  
-</h3><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-186
-187
-188
-189
-190
-191
-192
-193
-194
-195
-196
-197
-198
-199
-200</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 186</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_setup_compiler_package_generator'>setup_compiler_package_generator</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='comma'>,</span> <span class='id identifier rubyid_os_name'>os_name</span><span class='rparen'>)</span>
-  <span class='kw'>return</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:build_package_generator</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:build_package_generator</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-
-  <span class='kw'>case</span> <span class='id identifier rubyid_os_name'>os_name</span>
-  <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Windows</span><span class='tstring_end'>&#39;</span></span>
-    <span class='id identifier rubyid_generator'>generator</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>NSIS</span><span class='tstring_end'>&#39;</span></span>
-  <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Linux</span><span class='tstring_end'>&#39;</span></span>
-    <span class='id identifier rubyid_generator'>generator</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DEB</span><span class='tstring_end'>&#39;</span></span>
-  <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>MacOS</span><span class='tstring_end'>&#39;</span></span>
-    <span class='id identifier rubyid_generator'>generator</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>IFW</span><span class='tstring_end'>&#39;</span></span>
-  <span class='kw'>else</span>
-    <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Unknown operating system found, only supporting Windows, Linux, and MacOS</span><span class='tstring_end'>&#39;</span></span>
-  <span class='kw'>end</span>
-  <span class='id identifier rubyid_generator'>generator</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1453,18 +1301,18 @@
       <pre class="lines">
 
 
-244
-245
-246
-247
-248
-249
-250
-251
-252</pre>
+209
+210
+211
+212
+213
+214
+215
+216
+217</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 244</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 209</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_setup_compiler_target_arch'>setup_compiler_target_arch</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>.*Visual Studio.*</span><span class='regexp_end'>/i</span></span><span class='rparen'>)</span>    <span class='comment'># Visual Studio 2019+ generator behaves slightly different, need to add -A
@@ -1495,6 +1343,8 @@
       <pre class="lines">
 
 
+157
+158
 159
 160
 161
@@ -1507,15 +1357,10 @@
 168
 169
 170
-171
-172
-173
-174
-175
-176</pre>
+171</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 159</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 157</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_setup_compiler_version'>setup_compiler_version</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:version</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:version</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1528,11 +1373,8 @@
     <span class='id identifier rubyid_version'>version</span>
   <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>gcc</span><span class='tstring_end'>&#39;</span></span>
     <span class='backtick'>`</span><span class='tstring_content'>gcc -dumpversion</span><span class='tstring_end'>`</span></span>
-  <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>cppcheck</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>custom_check</span><span class='tstring_end'>&#39;</span></span>    <span class='comment'># we can actually leave the version nil for cppcheck, it will allow a version-agnostic spec
-</span>
-    <span class='kw'>nil</span>
   <span class='kw'>else</span>
-    <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Invalid compiler specified, must be one of clang, gcc, custom_check, cppcheck, or a variation on &quot;Visual Studio VV YYYY&quot;</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Invalid compiler specified, must be one of clang, gcc, or a variation on &quot;Visual Studio VV YYYY&quot;</span><span class='tstring_end'>&#39;</span></span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -1555,22 +1397,22 @@
       <pre class="lines">
 
 
-271
-272
-273
-274
-275
-276
-277
-278
-279
-280
-281
-282
-283</pre>
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 271</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 236</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_setup_gcc_style_cc_and_cxx'>setup_gcc_style_cc_and_cxx</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='lbracket'>[</span><span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:cc_bin</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:cxx_bin</span><span class='rbracket'>]</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:cc_bin</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>||</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:cxx_bin</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1593,7 +1435,7 @@
       <div class="method_details ">
   <h3 class="signature " id="setup_single_compiler-instance_method">
   
-    #<strong>setup_single_compiler</strong>(compiler, is_release, os_version)  &#x21d2; <tt>Object</tt> 
+    #<strong>setup_single_compiler</strong>(compiler, is_release)  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -1627,54 +1469,46 @@
       <pre class="lines">
 
 
-285
-286
-287
-288
-289
-290
-291
-292
-293
-294
-295
-296
-297
-298
-299
-300
-301
-302
-303
-304
-305
-306
-307
-308
-309
-310
-311
-312
-313</pre>
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 285</span>
+      <pre class="code"><span class="info file"># File 'lib/configuration.rb', line 250</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_setup_single_compiler'>setup_single_compiler</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='comma'>,</span> <span class='id identifier rubyid_is_release'>is_release</span><span class='comma'>,</span> <span class='id identifier rubyid_os_version'>os_version</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_setup_single_compiler'>setup_single_compiler</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='comma'>,</span> <span class='id identifier rubyid_is_release'>is_release</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:architecture</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_setup_compiler_architecture'>setup_compiler_architecture</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:version</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_setup_compiler_version'>setup_compiler_version</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:cc_bin</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:cxx_bin</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_setup_gcc_style_cc_and_cxx'>setup_gcc_style_cc_and_cxx</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:analyze_only</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:analyze_only</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:analyze_only</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='kw'>false</span>
   <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:release_only</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:release_only</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-  <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:cppcheck_bin</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_setup_compiler_cppcheck_bin'>setup_compiler_cppcheck_bin</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='comma'>,</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:version</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>cppcheck</span><span class='tstring_end'>&#39;</span></span>
-  <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:analyze_only</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='kw'>true</span> <span class='kw'>if</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>custom_check</span><span class='tstring_end'>&#39;</span></span> <span class='op'>||</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:name</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>cppcheck</span><span class='tstring_end'>&#39;</span></span>
   <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:skip_packaging</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:skip_packaging</span><span class='rbracket'>]</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>true</span><span class='regexp_end'>/i</span></span><span class='rparen'>)</span> <span class='op'>||</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:skip_packaging</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:skip_packaging</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
   <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:description</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_setup_compiler_description'>setup_compiler_description</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:build_package_generator</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_setup_compiler_package_generator'>setup_compiler_package_generator</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='comma'>,</span> <span class='id identifier rubyid_os_version'>os_version</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:build_type</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Release</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:build_type</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='op'>||</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:build_type</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span>
   <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:build_generator</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_setup_compiler_build_generator'>setup_compiler_build_generator</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:target_arch</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_setup_compiler_target_arch'>setup_compiler_target_arch</span><span class='lparen'>(</span><span class='id identifier rubyid_compiler'>compiler</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:package_mimetype</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>application/octet-stream</span><span class='tstring_end'>&#39;</span></span>
   <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:skip_regression</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:skip_regression</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
   <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:collect_performance_results</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='kw'>false</span> <span class='kw'>if</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:collect_performance_results</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
   <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:ctest_filter</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_compiler'>compiler</span><span class='lbracket'>[</span><span class='symbol'>:ctest_filter</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1803,7 +1637,7 @@
 </div>
 
       <div id="footer">
-  Generated on Thu May 18 09:42:02 2023 by
+  Generated on Thu May 18 10:34:59 2023 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.19 (ruby-2.7.0).
 </div>
