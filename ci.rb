@@ -281,7 +281,6 @@ did_any_builds = false
                 $logger.info "Removing pre-existing branch directory (#{p.this_src_dir})"
                 FileUtils.rm_rf(p.this_src_dir)
               end
-              p.do_package compiler, regression_base
 
               # Now we have a fully built and packaged up branch build, time to build the baseline if applicable
               if p.needs_regression_test(compiler) && regression_base
