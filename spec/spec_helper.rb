@@ -16,10 +16,10 @@ SimpleCov.start do
   add_filter "lib/processor.rb"  # this function is heavily cross platform and distribution and we won't get good coverage
 end
 
-# SimpleCov::Formatter::LcovFormatter.config do |c|
-#   c.report_with_single_file = true
-#   c.single_report_path = 'coverage/lcov.info'
-# end
+SimpleCov::Formatter::LcovFormatter.config do |c|
+  c.report_with_single_file = true
+  c.single_report_path = 'coverage/lcov.info'
+end
 
 # use this to easily run a single test
 RSpec.configure do |config|
