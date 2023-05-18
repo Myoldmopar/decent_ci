@@ -177,15 +177,6 @@ describe 'Configuration Testing' do
       expect{ setup_compiler_description({}) }.to raise_error(RuntimeError)  # need at least name
     end
   end
-  context 'when calling setup_compiler_package_generator' do
-    it 'should return the correct package generator' do
-      expect(setup_compiler_package_generator({:build_package_generator => 'Already here'}, nil)).to eql 'Already here'
-      expect(setup_compiler_package_generator({}, 'Windows')).to eql 'NSIS'
-      expect(setup_compiler_package_generator({}, 'Linux')).to eql 'DEB'
-      expect(setup_compiler_package_generator({}, 'MacOS')).to eql 'IFW'
-      expect{ setup_compiler_package_generator({}, 'WHATOS') }.to raise_error(RuntimeError)  # bad OS
-    end
-  end
   context 'when calling setup_compiler_extra_flags' do
     it 'should return the correct flags for non-releases' do
       expect(setup_compiler_extra_flags({:cmake_extra_flags => '-dg 1'}, false)).to eql '-dg 1'
@@ -342,7 +333,6 @@ describe 'Configuration Testing' do
       expect(filled_compiler).to include :cxx_bin
       expect(filled_compiler).to include :version
       expect(filled_compiler).to include :build_type
-      expect(filled_compiler).to include :build_package_generator
       i = 1
     end
     it 'should throw for missing required fields' do

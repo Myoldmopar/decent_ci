@@ -129,8 +129,7 @@ module Configuration
       :post_results_comment => true,
       :post_results_status => true,
       :cmake_bin => "\"#{which('cmake', cmake_paths)}\"",
-      :ctest_bin => "\"#{which('ctest', cmake_paths)}\"",
-      :cpack_bin => "\"#{which('cpack', cmake_paths)}\""
+      :ctest_bin => "\"#{which('ctest', cmake_paths)}\""
     }
   end
 

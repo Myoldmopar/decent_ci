@@ -94,12 +94,6 @@ module ResultsProcessor
         msg = ''
         type = nil
       elsif file.nil?
-        /^CPack Error: (?<message>.*)/ =~ err
-        unless message.nil?
-          results << CodeMessage.new(relative_path('CMakeLists.txt', src_dir, build_dir), 1, 0, 'error', "#{previous_line}#{err.strip}")
-          last_was_error_line = true
-        end
-
         /^CMake Error: (?<message>.*)/ =~ err
         unless message.nil?
           results << CodeMessage.new(relative_path('CMakeLists.txt', src_dir, build_dir), 1, 0, 'error', "#{previous_line}#{err.strip}")
@@ -306,15 +300,6 @@ module ResultsProcessor
     $logger.debug("stderr results: #{results}")
     @build_results.merge(results)
     python_exit_code.zero?
-  end
-
-  def parse_package_names(output)
-    results = []
-    output.encode('UTF-8', :invalid => :replace).split("\n").each do |l|
-      /CPack: - package: (?<filename>.*) generated./ =~ l
-      results << filename if filename
-    end
-    results
   end
 
   def process_lcov_results(out)

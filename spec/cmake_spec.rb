@@ -88,58 +88,6 @@ describe 'CMake Testing' do
       expect(response).to be_truthy
     end
   end
-  context 'when calling cmake_package' do
-    it 'should try to build a simple package' do
-      allow_any_instance_of(Runners).to receive(:run_scripts).and_return(['stdoutmsg', 'stderrmsg', 0])
-      allow_any_instance_of(Octokit::Client).to receive(:content).and_return([CMakeSpecNamedDummy.new('.decent_ci.yaml')])
-      @client = Octokit::Client.new(:access_token => 'abc')
-      @config = load_configuration('spec/resources', 'abc', false)
-      compiler = @config.compilers.first
-      src_dir = Dir.mktmpdir
-      build_dir = File.join(src_dir, 'build')
-      @package_results = SortedSet.new
-      cmake_package(compiler, src_dir, build_dir, 'Debug')
-    end
-    it 'should try to build but fail with no package results' do
-      allow_any_instance_of(Runners).to receive(:run_scripts).and_return(['stdoutmsg', 'stderrmsg', 0])
-      allow_any_instance_of(Octokit::Client).to receive(:content).and_return([CMakeSpecNamedDummy.new('.decent_ci.yaml')])
-      allow_any_instance_of(ResultsProcessor).to receive(:process_cmake_results).and_return(nil)
-      @client = Octokit::Client.new(:access_token => 'abc')
-      @config = load_configuration('spec/resources', 'abc', false)
-      compiler = @config.compilers.first
-      src_dir = Dir.mktmpdir
-      build_dir = File.join(src_dir, 'build')
-      @package_results = SortedSet.new
-      expect{ cmake_package(compiler, src_dir, build_dir, 'Debug') }.to raise_error RuntimeError
-    end
-    it 'should try to build and fail but with some package results' do
-      allow_any_instance_of(Runners).to receive(:run_scripts).and_return(['stdoutmsg', 'stderrmsg', 0])
-      allow_any_instance_of(Octokit::Client).to receive(:content).and_return([CMakeSpecNamedDummy.new('.decent_ci.yaml')])
-      allow_any_instance_of(ResultsProcessor).to receive(:process_cmake_results).and_return(nil)
-      @client = Octokit::Client.new(:access_token => 'abc')
-      @config = load_configuration('spec/resources', 'abc', false)
-      compiler = @config.compilers.first
-      src_dir = Dir.mktmpdir
-      build_dir = File.join(src_dir, 'build')
-      @package_results = SortedSet.new([1, 2])
-      expect(cmake_package(compiler, src_dir, build_dir, 'Debug')).to be_nil
-    end
-    it 'should complete a build and return a proper name' do
-      allow_any_instance_of(Runners).to receive(:run_scripts).and_return(['stdoutmsg', 'stderrmsg', 0])
-      allow_any_instance_of(Octokit::Client).to receive(:content).and_return([CMakeSpecNamedDummy.new('.decent_ci.yaml')])
-      allow_any_instance_of(ResultsProcessor).to receive(:process_cmake_results).and_return(true)
-      allow_any_instance_of(ResultsProcessor).to receive(:parse_package_names).and_return(['hello'])
-      @client = Octokit::Client.new(:access_token => 'abc')
-      @config = load_configuration('spec/resources', 'abc', false)
-      compiler = @config.compilers.first
-      src_dir = Dir.mktmpdir
-      build_dir = File.join(src_dir, 'build')
-      @package_results = SortedSet.new([1, 2])
-      response = cmake_package(compiler, src_dir, build_dir, 'Debug')
-      expect(response.length).to eql 1
-      expect(response[0]).to eql 'hello'
-    end
-  end
   context 'when calling cmake_test' do
     it 'should run a simple set of tests' do
       allow_any_instance_of(Runners).to receive(:run_scripts).and_return(['stdoutmsg', 'stderrmsg', 0])

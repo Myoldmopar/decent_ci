@@ -155,24 +155,6 @@ describe 'ResultsProcessor Testing' do
     end
   end
 
-  context 'when calling parse_package_names' do
-    it 'should ignore empty lines' do
-      message = ''
-      response = parse_package_names(message)
-      expect(response.length).to eql 0
-    end
-    it 'should get a valid package name from one line' do
-      message = 'CPack: - package: abd generated.'
-      response = parse_package_names(message)
-      expect(response.length).to eql 1
-    end
-    it 'should get multiple valid package names' do
-      message = "CPack: - package: abd generated.\nCPack: - package: zyx generated."
-      response = parse_package_names(message)
-      expect(response.length).to eql 2
-    end
-  end
-
   context 'when calling process_lcov_results' do
     it 'should properly parse an lcov response' do
       message = "Overall coverage rate:\n lines......: 67.9% (6 of 10 lines)\n functions..: 83.8% (12 of 36 functions)"
@@ -192,10 +174,6 @@ describe 'ResultsProcessor Testing' do
       expect(@build_results.length).to eql 0
     end
     it 'should match on a few different formats' do
-      @build_results = SortedSet.new
-      stderr = 'CPack Error: Hey there'
-      process_cmake_results('/src/dir', '/build/dir', stderr,0, false)
-      expect(@build_results.length).to eql 1
       @build_results = SortedSet.new
       stderr = 'CMake Error: Hey there'
       process_cmake_results('/src/dir', '/build/dir', stderr,0, false)
@@ -221,12 +199,6 @@ describe 'ResultsProcessor Testing' do
       process_cmake_results('/src/dir', '/build/dir', stderr,0, false)
       expect(@build_results.length).to eql 1
     end
-    it 'should ignore blank lines' do
-      @build_results = SortedSet.new
-      stderr = "CPack Error: Hey there\n\nCPack Error: Hey there-ish"
-      process_cmake_results('/src/dir', '/build/dir', stderr,0, false)
-      expect(@build_results.length).to eql 2
-    end
     it 'should handle odd long cmake messages' do
       @build_results = SortedSet.new
       stderr = "CMake Error at CMakeLists.txt:33 (d):\nI am on a second line"
@@ -248,12 +220,6 @@ describe 'ResultsProcessor Testing' do
         expect(br.message).to include 'there'
         expect(br.message).to include 'second'
       end
-    end
-    it 'should assign errors to package during packaging' do
-      @package_results = SortedSet.new
-      stderr = 'CPack Error: Hey there'
-      process_cmake_results('/src/dir', '/build/dir', stderr,0, true)
-      expect(@package_results.length).to eql 1
     end
   end
 
