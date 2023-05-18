@@ -28,7 +28,6 @@ class PotentialBuild
   include Configuration
   include ResultsProcessor
   include Lcov
-  include CustomCheck
   include Runners
 
   attr_reader :tag_name, :commit_sha, :branch_name, :repository
