@@ -27,9 +27,9 @@ jobs:
         run: sudo apt-get install -y lsb-release
       - name: Run Tests
         run: bundle exec rake
-#      - name: Coveralls
-#        uses: coverallsapp/github-action@v1.1.2
-#        with:
-#          github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Push Coverage Results
-        run: bundle exec rake coveralls:push
+      - name: Coveralls
+        uses: coverallsapp/github-action@v1.1.2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Push Coverage Results
+#        run: bundle exec rake coveralls:push
