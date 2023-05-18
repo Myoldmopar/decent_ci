@@ -1,6 +1,5 @@
 require 'rspec'
-require_relative '../lib/cppcheck'
-require_relative '../lib/custom_check'
+require_relative 'spec_helper'
 require_relative '../lib/potentialbuild'
 require_relative '../lib/resultsprocessor'
 
@@ -19,8 +18,6 @@ end
 
 describe 'PotentialBuild Testing' do
   include ResultsProcessor
-  include Cppcheck
-  include CustomCheck
   context 'when doing simple construction' do
     it 'should succeed at construction' do
       allow_any_instance_of(Octokit::Client).to receive(:content).and_return([PotentialBuildNamedDummy.new('.decent_ci.yaml')])
@@ -38,17 +35,6 @@ describe 'PotentialBuild Testing' do
       pr_base_repo = nil
       pr_base_ref = nil
       PotentialBuild.new(client, token, repo, tag_name, commit_sha, branch_name, author, release_url, release_assets, pull_id, pr_base_repo, pr_base_ref)
-    end
-  end
-  context 'when calling needs_release_package' do
-    it 'should base it on the analyze only flag' do
-      allow_any_instance_of(Octokit::Client).to receive(:content).and_return([PotentialBuildNamedDummy.new('.decent_ci.yaml')])
-      allow_any_instance_of(Octokit::Client).to receive(:repo).and_return(PotentialBuildDummyRepo.new)
-      client = Octokit::Client.new(:access_token => 'abc')
-      p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', '', '', '', 0, '', '')
-      expect(p.needs_release_package({:analyze_only => true})).to be_falsey
-      expect(p.needs_release_package({})).to be_truthy # defaults to true if no key
-      expect(p.needs_release_package({:analyze_only => false})).to be_truthy
     end
   end
   context 'when calling checkout' do
@@ -103,49 +89,11 @@ describe 'PotentialBuild Testing' do
       expect(@p.do_upload({:s3_upload => true, :coverage_s3_bucket => 'bucket'})).to include 'out_url'
     end
   end
-  context 'when calling do_package' do
-    before do
-      allow_any_instance_of(Octokit::Client).to receive(:content).and_return([PotentialBuildNamedDummy.new('.decent_ci.yaml')])
-      allow_any_instance_of(Octokit::Client).to receive(:repo).and_return(PotentialBuildDummyRepo.new)
-      @client = Octokit::Client.new(:access_token => 'abc')
-    end
-    it 'should quit gracefully if not doing packaging for multiple reasons' do
-      p = PotentialBuild.new(@client, '', 'spec/resources', '', '', '', '', nil, '', 0, '', '')
-      expect(p.do_package({}, nil)).to be_nil  # if it's not a release build then don't try to build it
-      p = PotentialBuild.new(@client, '', 'spec/resources', '', '', '', '', 'REL_URL', '', 0, '', '')
-      expect(p.do_package({:analyze_only => true}, nil)).to be_nil  # analyze_only essentially means no release
-      expect(p.do_package({:analyze_only => false, :skip_packaging => true}, nil)).to be_nil  # skip_packaging overrides other flags
-    end
-    it 'should do packaging successfully' do
-      p = PotentialBuild.new(@client, '', 'spec/resources', '', '', '', '', 'REL_URL', '', 0, '', '')
-      allow_any_instance_of(PotentialBuild).to receive(:do_build).and_return(nil)
-      allow_any_instance_of(PotentialBuild).to receive(:cmake_package).and_return('package_location')
-      expect(p.do_package({:analyze_only => false}, nil)).to include 'package_location'
-    end
-    it 'should raise an exception if cmake_package fails' do
-      p = PotentialBuild.new(@client, '', 'spec/resources', '', '', '', '', 'REL_URL', '', 0, '', '')
-      allow_any_instance_of(PotentialBuild).to receive(:do_build).and_return(nil)
-      allow_any_instance_of(PotentialBuild).to receive(:cmake_package).and_raise('Uh oh')
-      expect{ p.do_package({:analyze_only => false}, nil) }.to raise_error RuntimeError
-    end
-  end
   context 'when calling do_build' do
     before do
       allow_any_instance_of(Octokit::Client).to receive(:content).and_return([PotentialBuildNamedDummy.new('.decent_ci.yaml')])
       allow_any_instance_of(Octokit::Client).to receive(:repo).and_return(PotentialBuildDummyRepo.new)
       @client = Octokit::Client.new(:access_token => 'abc')
-    end
-    it 'should call custom check if it is trying to run custom checks' do
-      p = PotentialBuild.new(@client, '', 'spec/resources', '', '', '', '', '', '', 0, '', '')
-      allow_any_instance_of(PotentialBuild).to receive(:checkout).and_return(true)
-      expect_any_instance_of(CustomCheck).to receive(:custom_check).and_return(nil)
-      p.do_build({:name => "custom_check"}, nil)
-    end
-    it 'should call cppcheck if it is trying to run cppchecks' do
-      p = PotentialBuild.new(@client, '', 'spec/resources', '', '', '', '', '', '', 0, '', '')
-      allow_any_instance_of(PotentialBuild).to receive(:checkout).and_return(true)
-      expect_any_instance_of(Cppcheck).to receive(:cppcheck).and_return(nil)
-      p.do_build({:name => "cppcheck"}, nil)
     end
     it 'should call cmake_build if it is trying to run any other compilers' do
       p = PotentialBuild.new(@client, '', 'spec/resources', '', '', '', '', '', '', 0, '', '')
@@ -159,11 +107,6 @@ describe 'PotentialBuild Testing' do
       allow_any_instance_of(Octokit::Client).to receive(:content).and_return([PotentialBuildNamedDummy.new('.decent_ci.yaml')])
       allow_any_instance_of(Octokit::Client).to receive(:repo).and_return(PotentialBuildDummyRepo.new)
       @client = Octokit::Client.new(:access_token => 'abc')
-    end
-    it 'should just build and return quietly for non-cmake builds' do
-      p = PotentialBuild.new(@client, '', 'spec/resources', '', '', '', '', '', '', 0, '', '')
-      allow_any_instance_of(PotentialBuild).to receive(:do_build).and_return(true)
-      p.do_test({:name => "custom_check"}, nil) # just succeed
     end
     it 'should build and run cmake tests when appropriate' do
       p = PotentialBuild.new(@client, '', 'spec/resources', '', '', '', '', '', '', 0, '', '')
@@ -198,10 +141,10 @@ describe 'PotentialBuild Testing' do
       allow_any_instance_of(Octokit::Client).to receive(:repo).and_return(PotentialBuildDummyRepo.new)
       client = Octokit::Client.new(:access_token => 'abc')
       p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', '', '', '', 0, '', '')
-      expect(p.needs_regression_test({:analyze_only => true, :skip_regression => false})).to be_falsey
-      expect(p.needs_regression_test({:analyze_only => false, :skip_regression => true})).to be_falsey
+      expect(p.needs_regression_test({:skip_regression => false})).to be_truthy
+      expect(p.needs_regression_test({:skip_regression => true})).to be_falsey
       ENV['DECENT_CI_SKIP_REGRESSIONS'] = 'Y'
-      expect(p.needs_regression_test({:analyze_only => false, :skip_regression => false})).to be_falsey
+      expect(p.needs_regression_test({:skip_regression => false})).to be_falsey
       ENV.delete('DECENT_CI_SKIP_REGRESSIONS')
     end
     it 'should run it when things are just right' do
@@ -209,7 +152,7 @@ describe 'PotentialBuild Testing' do
       allow_any_instance_of(Octokit::Client).to receive(:repo).and_return(PotentialBuildDummyRepo.new)
       client = Octokit::Client.new(:access_token => 'abc')
       p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', '', '', '', 0, '', '')
-      expect(p.needs_regression_test({:analyze_only => false, :skip_regression => false})).to be_truthy
+      expect(p.needs_regression_test({:skip_regression => false})).to be_truthy
     end
   end
   context 'when calling parse_callgrind' do

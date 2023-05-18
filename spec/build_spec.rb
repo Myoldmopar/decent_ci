@@ -1,6 +1,7 @@
 require 'octokit'
 require 'rspec'
 
+require_relative 'spec_helper'
 require_relative '../lib/decent_exceptions'
 require_relative '../lib/potentialbuild'
 require_relative '../lib/build'
@@ -251,18 +252,6 @@ class DummyPotentialBuild
 end
 
 describe 'Build Testing' do
-  context 'when calling query_releases' do
-    it 'should include builds that are valid and new' do
-      # default age is 30
-      c = DummyClient2.new
-      allow(Octokit::Client).to receive(:new).and_return(c)
-      allow(PotentialBuild).to receive(:new).and_return(true)
-      b = Build.new('abcdef', 'spec/resources', 10)
-      expect(b.client.releases('').length).to eql 4 # should have three total releases
-      b.query_releases
-      expect(b.potential_builds.length).to eql 1 # but only one is valid and new enough to build
-    end
-  end
   context 'when calling query_branches' do
     it 'should include branches that are valid and new' do
       allow(Octokit::Client).to receive(:new).and_return(DummyClient2.new)

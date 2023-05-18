@@ -1,7 +1,8 @@
 require 'base64'
 require 'rspec'
-require_relative '../lib/configuration'
 require 'octokit'
+require_relative 'spec_helper'
+require_relative '../lib/configuration'
 
 class YamlResponse
   attr_reader :content
@@ -147,16 +148,10 @@ describe 'Configuration Testing' do
       expect{ setup_compiler_version({:name => 'Visual Studio'}) }.to raise_error(RuntimeError)  # VS requires version
       expect{ setup_compiler_version({:name => 'OtherCompiler'}) }.to raise_error(RuntimeError)  # unknown compiler
     end
-    it 'should find valid versions for gcc, clang, and handle cppcheck' do
+    it 'should find valid versions for gcc, clang' do
       dir1 = Dir.mktmpdir
       cur_path = ENV['PATH']
       ENV['PATH'] = dir1
-      binary_name = "cppcheck"
-      binary_extension = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';')[0] : ''
-      binary_file_name = "#{binary_name}#{binary_extension}"
-      cc_binary = File.join(dir1, binary_file_name)
-      open(cc_binary, 'w') { |f| f << "#!/bin/bash\necho Cppcheck 1" }
-      File.chmod(0777, cc_binary)
       binary_name = "gcc"
       binary_extension = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';')[0] : ''
       binary_file_name = "#{binary_name}#{binary_extension}"
@@ -169,7 +164,6 @@ describe 'Configuration Testing' do
       cc_binary = File.join(dir1, binary_file_name)
       open(cc_binary, 'w') { |f| f << "#!/bin/bash\necho clang version 3" }
       File.chmod(0777, cc_binary)
-      expect(setup_compiler_version({:name => 'cppcheck'})).to be_nil
       expect(setup_compiler_version({:name => 'gcc'})).to eql '2'
       expect(setup_compiler_version({:name => 'clang'})).to eql '3'
       ENV['PATH'] = cur_path
@@ -179,15 +173,6 @@ describe 'Configuration Testing' do
     it 'should return the correct SEFLKJ' do
       expect(setup_compiler_description({:name => 'Cool Compiler', :version => 1})).to be_a String
       expect{ setup_compiler_description({}) }.to raise_error(RuntimeError)  # need at least name
-    end
-  end
-  context 'when calling setup_compiler_package_generator' do
-    it 'should return the correct package generator' do
-      expect(setup_compiler_package_generator({:build_package_generator => 'Already here'}, nil)).to eql 'Already here'
-      expect(setup_compiler_package_generator({}, 'Windows')).to eql 'NSIS'
-      expect(setup_compiler_package_generator({}, 'Linux')).to eql 'DEB'
-      expect(setup_compiler_package_generator({}, 'MacOS')).to eql 'IFW'
-      expect{ setup_compiler_package_generator({}, 'WHATOS') }.to raise_error(RuntimeError)  # bad OS
     end
   end
   context 'when calling setup_compiler_extra_flags' do
@@ -206,30 +191,6 @@ describe 'Configuration Testing' do
     end
     it 'should return a valid number' do
       expect(setup_compiler_num_processors({})).to be_a Integer
-    end
-  end
-  context 'when calling setup_compiler_cppcheck_bin' do
-    it 'should return if already specified' do
-      expect(setup_compiler_cppcheck_bin({:cppcheck_bin => 'Already here'}, nil)).to eql 'Already here'
-    end
-    it 'should fail if a version cannot be found' do
-      cur_path = ENV['PATH']
-      ENV['PATH'] = ''
-      expect{ setup_compiler_cppcheck_bin({}, nil) }.to raise_error RuntimeError
-      ENV['PATH'] = cur_path
-    end
-    it 'should find the cppcheck binary by name' do
-      dir1 = Dir.mktmpdir
-      binary_name = "cppcheck-1"
-      binary_extension = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';')[0] : ''
-      binary_file_name = "#{binary_name}#{binary_extension}"
-      cc_binary = File.join(dir1, binary_file_name)
-      open(cc_binary, 'w') { |f| f << "#!/bin/bash\necho 1" }
-      File.chmod(0777, cc_binary)
-      cur_path = ENV['PATH']
-      ENV['PATH'] = dir1
-      expect(setup_compiler_cppcheck_bin({}, 1)).to include cc_binary
-      ENV['PATH'] = cur_path
     end
   end
   context 'when calling setup_compiler_build_generator' do
@@ -365,12 +326,11 @@ describe 'Configuration Testing' do
 
     end
     it 'should accept a compiler with the minimal fields' do
-      filled_compiler = setup_single_compiler({:name => "gcc"}, false, 'Linux')
+      filled_compiler = setup_single_compiler({:name => "gcc"}, false)
       expect(filled_compiler).to include :cc_bin
       expect(filled_compiler).to include :cxx_bin
       expect(filled_compiler).to include :version
       expect(filled_compiler).to include :build_type
-      expect(filled_compiler).to include :build_package_generator
       i = 1
     end
     it 'should throw for missing required fields' do

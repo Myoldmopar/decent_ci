@@ -1,18 +1,17 @@
 name: Unit Tests
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   test:
     strategy:
       matrix:
         include:
-          - os: ubuntu-18.04
           - os: ubuntu-20.04
-          - os: macos-10.15
+          - os: ubuntu-22.04
+          - os: macos-11
           # - os: windows-2019
     runs-on: ${{ matrix.os }}
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up Ruby 2.7
@@ -23,9 +22,14 @@ jobs:
         run: |
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
+      - name: Apt Dependencies
+        if: contains(matrix.os, 'ubuntu')
+        run: sudo apt-get install -y lsb-release
       - name: Run Tests
-        run: bundle exec rake
-#      - name: Coveralls
-#        uses: coverallsapp/github-action@v1.1.2
-#        with:
-#          github-token: ${{ secrets.GITHUB_TOKEN }}
+        run: bundle exec rspec
+      - name: Coveralls
+        uses: coverallsapp/github-action@v1.1.2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Push Coverage Results
+#        run: bundle exec rake coveralls:push

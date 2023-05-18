@@ -76,7 +76,7 @@
   
   <dl>
     <dt>Included in:</dt>
-    <dd><span class='object_link'><a href="CMake.html" title="CMake (module)">CMake</a></span>, <span class='object_link'><a href="Cppcheck.html" title="Cppcheck (module)">Cppcheck</a></span>, <span class='object_link'><a href="CustomCheck.html" title="CustomCheck (module)">CustomCheck</a></span>, <span class='object_link'><a href="Lcov.html" title="Lcov (module)">Lcov</a></span>, <span class='object_link'><a href="PotentialBuild.html" title="PotentialBuild (class)">PotentialBuild</a></span></dd>
+    <dd><span class='object_link'><a href="CMake.html" title="CMake (module)">CMake</a></span>, <span class='object_link'><a href="Lcov.html" title="Lcov (module)">Lcov</a></span>, <span class='object_link'><a href="PotentialBuild.html" title="PotentialBuild (class)">PotentialBuild</a></span></dd>
   </dl>
   
 
@@ -220,9 +220,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>originally from <a
-href="https://gist.github.com/lpar/1032297">gist.github.com/lpar/1032297</a>
-runs a specified shell command in a separate thread.</p>
+<p>originally from <a href="https://gist.github.com/lpar/1032297">gist.github.com/lpar/1032297</a> runs a specified shell command in a separate thread.</p>
 </div></span>
   
 </li>
@@ -291,13 +289,13 @@ runs a specified shell command in a separate thread.</p>
   <span class='comment'># Give Ruby time to clean up the other thread
 </span>  <span class='id identifier rubyid_sleep'>sleep</span> <span class='int'>1</span>
 
-  <span class='kw'>if</span> <span class='id identifier rubyid_thread'>thread</span><span class='period'>.</span><span class='id identifier rubyid_alive?'>alive?</span>
-    <span class='comment'># We need to kill the process, because killing the thread leaves
+  <span class='kw'>if</span> <span class='id identifier rubyid_thread'>thread</span><span class='period'>.</span><span class='id identifier rubyid_alive?'>alive?</span>    <span class='comment'># We need to kill the process, because killing the thread leaves
 </span>    <span class='comment'># the process alive but detached, annoyingly enough.
 </span>    <span class='comment'># :nocov: I cannot figure out how to reproduce this right now
-</span>    <span class='const'>Process</span><span class='period'>.</span><span class='id identifier rubyid_kill'>kill</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>TERM</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_pid'>pid</span><span class='rparen'>)</span>
-    <span class='comment'># :nocov:
-</span>  <span class='kw'>end</span>
+</span>
+    <span class='const'>Process</span><span class='period'>.</span><span class='id identifier rubyid_kill'>kill</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>TERM</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_pid'>pid</span><span class='rparen'>)</span>    <span class='comment'># :nocov:
+</span>
+  <span class='kw'>end</span>
   <span class='lbracket'>[</span><span class='id identifier rubyid_out'>out</span><span class='comma'>,</span> <span class='id identifier rubyid_err'>err</span><span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -346,11 +344,11 @@ runs a specified shell command in a separate thread.</p>
       <pre class="code"><span class="info file"># File 'lib/runners.rb', line 89</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read_state_singular'>read_state_singular</span><span class='lparen'>(</span><span class='id identifier rubyid_stdout'>stdout</span><span class='comma'>,</span> <span class='id identifier rubyid_stderr'>stderr</span><span class='comma'>,</span> <span class='id identifier rubyid_tick'>tick</span><span class='comma'>,</span> <span class='id identifier rubyid_out'>out</span><span class='comma'>,</span> <span class='id identifier rubyid_err'>err</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_this_break'>this_break</span> <span class='op'>=</span> <span class='kw'>false</span>
-  <span class='comment'># Wait up to `tick` seconds for output/error data
-</span>  <span class='id identifier rubyid_rs'>rs</span><span class='comma'>,</span> <span class='op'>=</span> <span class='const'>Kernel</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='id identifier rubyid_stdout'>stdout</span><span class='comma'>,</span> <span class='id identifier rubyid_stderr'>stderr</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_tick'>tick</span><span class='rparen'>)</span>
-  <span class='comment'># Try to read the data
-</span>  <span class='kw'>begin</span>
+  <span class='id identifier rubyid_this_break'>this_break</span> <span class='op'>=</span> <span class='kw'>false</span>  <span class='comment'># Wait up to `tick` seconds for output/error data
+</span>
+  <span class='id identifier rubyid_rs'>rs</span><span class='comma'>,</span> <span class='op'>=</span> <span class='const'>Kernel</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='id identifier rubyid_stdout'>stdout</span><span class='comma'>,</span> <span class='id identifier rubyid_stderr'>stderr</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_tick'>tick</span><span class='rparen'>)</span>  <span class='comment'># Try to read the data
+</span>
+  <span class='kw'>begin</span>
     <span class='id identifier rubyid_rs'>rs</span><span class='op'>&amp;.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_r'>r</span><span class='op'>|</span>
       <span class='kw'>if</span> <span class='id identifier rubyid_r'>r</span> <span class='op'>==</span> <span class='id identifier rubyid_stdout'>stdout</span>
         <span class='id identifier rubyid_out'>out</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_stdout'>stdout</span><span class='period'>.</span><span class='id identifier rubyid_read_nonblock'>read_nonblock</span><span class='lparen'>(</span><span class='int'>4096</span><span class='rparen'>)</span>
@@ -358,11 +356,11 @@ runs a specified shell command in a separate thread.</p>
         <span class='id identifier rubyid_err'>err</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_stderr'>stderr</span><span class='period'>.</span><span class='id identifier rubyid_read_nonblock'>read_nonblock</span><span class='lparen'>(</span><span class='int'>4096</span><span class='rparen'>)</span>
       <span class='kw'>end</span>
     <span class='kw'>end</span>
-  <span class='kw'>rescue</span> <span class='const'>IO</span><span class='op'>::</span><span class='const'>WaitReadable</span> <span class='comment'># rubocop:disable Lint/HandleExceptions
+  <span class='kw'>rescue</span> <span class='const'>IO</span><span class='op'>::</span><span class='const'>WaitReadable</span> <span class='comment'># rubocop:disable Lint/SuppressedException
 </span>    <span class='comment'># A read would block, so loop around for another select
-</span>  <span class='kw'>rescue</span> <span class='const'>EOFError</span>
-    <span class='comment'># Command has completed, not really an error...
-</span>    <span class='id identifier rubyid_this_break'>this_break</span> <span class='op'>=</span> <span class='kw'>true</span>
+</span>  <span class='kw'>rescue</span> <span class='const'>EOFError</span>    <span class='comment'># Command has completed, not really an error...
+</span>
+    <span class='id identifier rubyid_this_break'>this_break</span> <span class='op'>=</span> <span class='kw'>true</span>
   <span class='kw'>end</span>
   <span class='lbracket'>[</span><span class='id identifier rubyid_out'>out</span><span class='comma'>,</span> <span class='id identifier rubyid_err'>err</span><span class='comma'>,</span> <span class='id identifier rubyid_this_break'>this_break</span><span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
@@ -466,12 +464,12 @@ runs a specified shell command in a separate thread.</p>
       <pre class="code"><span class="info file"># File 'lib/runners.rb', line 25</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_run_single_script'>run_single_script</span><span class='lparen'>(</span><span class='id identifier rubyid_this_config'>this_config</span><span class='comma'>,</span> <span class='id identifier rubyid_cmd'>cmd</span><span class='comma'>,</span> <span class='id identifier rubyid_env'>env</span><span class='rparen'>)</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_this_config'>this_config</span><span class='period'>.</span><span class='id identifier rubyid_os'>os</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Windows</span><span class='tstring_end'>&#39;</span></span>
-    <span class='comment'># :nocov: Not testing on Windows
-</span>    <span class='gvar'>$logger</span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Unable to set timeout for process execution on windows</span><span class='tstring_end'>&#39;</span></span>
-    <span class='id identifier rubyid_stdout'>stdout</span><span class='comma'>,</span> <span class='id identifier rubyid_stderr'>stderr</span><span class='comma'>,</span> <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='const'>Open3</span><span class='period'>.</span><span class='id identifier rubyid_capture3'>capture3</span><span class='lparen'>(</span><span class='id identifier rubyid_env'>env</span><span class='comma'>,</span> <span class='id identifier rubyid_cmd'>cmd</span><span class='rparen'>)</span>
-    <span class='comment'># :nocov:
-</span>  <span class='kw'>else</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_this_config'>this_config</span><span class='period'>.</span><span class='id identifier rubyid_os'>os</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Windows</span><span class='tstring_end'>&#39;</span></span>    <span class='comment'># :nocov: Not testing on Windows
+</span>
+    <span class='gvar'>$logger</span><span class='period'>.</span><span class='id identifier rubyid_debug'>debug</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Unable to set timeout for process execution on windows</span><span class='tstring_end'>&#39;</span></span>
+    <span class='id identifier rubyid_stdout'>stdout</span><span class='comma'>,</span> <span class='id identifier rubyid_stderr'>stderr</span><span class='comma'>,</span> <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='const'>Open3</span><span class='period'>.</span><span class='id identifier rubyid_capture3'>capture3</span><span class='lparen'>(</span><span class='id identifier rubyid_env'>env</span><span class='comma'>,</span> <span class='id identifier rubyid_cmd'>cmd</span><span class='rparen'>)</span>    <span class='comment'># :nocov:
+</span>
+  <span class='kw'>else</span>
     <span class='comment'># allow up to 6 hours
 </span>    <span class='id identifier rubyid_stdout'>stdout</span><span class='comma'>,</span> <span class='id identifier rubyid_stderr'>stderr</span><span class='comma'>,</span> <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='id identifier rubyid_run_with_timeout'>run_with_timeout</span><span class='lparen'>(</span><span class='id identifier rubyid_env'>env</span><span class='comma'>,</span> <span class='id identifier rubyid_cmd'>cmd</span><span class='comma'>,</span> <span class='int'>60</span> <span class='op'>*</span> <span class='int'>60</span> <span class='op'>*</span> <span class='int'>6</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
@@ -499,15 +497,9 @@ runs a specified shell command in a separate thread.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>originally from <a
-href="https://gist.github.com/lpar/1032297">gist.github.com/lpar/1032297</a>
-runs a specified shell command in a separate thread. If it exceeds the
-given timeout in seconds, kills it. Returns any output produced by the
-command (stdout or stderr) as a String. Uses Kernel.select to wait up to
-the tick length (in seconds) between checks on the command&#39;s status</p>
+<p>originally from <a href="https://gist.github.com/lpar/1032297">gist.github.com/lpar/1032297</a> runs a specified shell command in a separate thread. If it exceeds the given timeout in seconds, kills it. Returns any output produced by the command (stdout or stderr) as a String. Uses Kernel.select to wait up to the tick length (in seconds) between checks on the command&#39;s status</p>
 
-<p>If you&#39;ve got a cleaner way of doing this, I&#39;d be interested to see
-it. If you think you can do it with Ruby&#39;s Timeout module, think again.</p>
+<p>If you&#39;ve got a cleaner way of doing this, I&#39;d be interested to see it. If you think you can do it with Ruby&#39;s Timeout module, think again.</p>
 
 
   </div>
@@ -541,9 +533,9 @@ it. If you think you can do it with Ruby&#39;s Timeout module, think again.</p>
 <span class='kw'>def</span> <span class='id identifier rubyid_run_with_timeout'>run_with_timeout</span><span class='lparen'>(</span><span class='id identifier rubyid_env'>env</span><span class='comma'>,</span> <span class='id identifier rubyid_command'>command</span><span class='comma'>,</span> <span class='id identifier rubyid_timeout'>timeout</span> <span class='op'>=</span> <span class='int'>60</span> <span class='op'>*</span> <span class='int'>60</span> <span class='op'>*</span> <span class='int'>4</span><span class='comma'>,</span> <span class='id identifier rubyid_tick'>tick</span> <span class='op'>=</span> <span class='int'>2</span><span class='rparen'>)</span>
   <span class='kw'>begin</span>
     <span class='comment'># Start task in another thread, which spawns a process
-</span>    <span class='id identifier rubyid_stdin'>stdin</span><span class='comma'>,</span> <span class='id identifier rubyid_stdout'>stdout</span><span class='comma'>,</span> <span class='id identifier rubyid_stderr'>stderr</span><span class='comma'>,</span> <span class='id identifier rubyid_thread'>thread</span> <span class='op'>=</span> <span class='const'>Open3</span><span class='period'>.</span><span class='id identifier rubyid_popen3'>popen3</span><span class='lparen'>(</span><span class='id identifier rubyid_env'>env</span><span class='comma'>,</span> <span class='id identifier rubyid_command'>command</span><span class='rparen'>)</span>
-    <span class='comment'># Start watching the original running thread and watching output
-</span>    <span class='id identifier rubyid_out'>out</span><span class='comma'>,</span> <span class='id identifier rubyid_err'>err</span> <span class='op'>=</span> <span class='id identifier rubyid_monitor_thread_state'>monitor_thread_state</span><span class='lparen'>(</span><span class='id identifier rubyid_timeout'>timeout</span><span class='comma'>,</span> <span class='id identifier rubyid_thread'>thread</span><span class='comma'>,</span> <span class='id identifier rubyid_tick'>tick</span><span class='comma'>,</span> <span class='id identifier rubyid_stdout'>stdout</span><span class='comma'>,</span> <span class='id identifier rubyid_stderr'>stderr</span><span class='rparen'>)</span>
+</span>    <span class='id identifier rubyid_stdin'>stdin</span><span class='comma'>,</span> <span class='id identifier rubyid_stdout'>stdout</span><span class='comma'>,</span> <span class='id identifier rubyid_stderr'>stderr</span><span class='comma'>,</span> <span class='id identifier rubyid_thread'>thread</span> <span class='op'>=</span> <span class='const'>Open3</span><span class='period'>.</span><span class='id identifier rubyid_popen3'>popen3</span><span class='lparen'>(</span><span class='id identifier rubyid_env'>env</span><span class='comma'>,</span> <span class='id identifier rubyid_command'>command</span><span class='rparen'>)</span>    <span class='comment'># Start watching the original running thread and watching output
+</span>
+    <span class='id identifier rubyid_out'>out</span><span class='comma'>,</span> <span class='id identifier rubyid_err'>err</span> <span class='op'>=</span> <span class='id identifier rubyid_monitor_thread_state'>monitor_thread_state</span><span class='lparen'>(</span><span class='id identifier rubyid_timeout'>timeout</span><span class='comma'>,</span> <span class='id identifier rubyid_thread'>thread</span><span class='comma'>,</span> <span class='id identifier rubyid_tick'>tick</span><span class='comma'>,</span> <span class='id identifier rubyid_stdout'>stdout</span><span class='comma'>,</span> <span class='id identifier rubyid_stderr'>stderr</span><span class='rparen'>)</span>
   <span class='kw'>ensure</span>
     <span class='id identifier rubyid_stdin'>stdin</span><span class='op'>&amp;.</span><span class='id identifier rubyid_close'>close</span>
     <span class='id identifier rubyid_stdout'>stdout</span><span class='op'>&amp;.</span><span class='id identifier rubyid_close'>close</span>
@@ -561,9 +553,9 @@ it. If you think you can do it with Ruby&#39;s Timeout module, think again.</p>
 </div>
 
       <div id="footer">
-  Generated on Wed May 29 12:01:52 2019 by
+  Generated on Thu May 18 10:34:59 2023 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.19 (ruby-2.5.1).
+  0.9.19 (ruby-2.7.0).
 </div>
 
     </div>

@@ -1,4 +1,5 @@
 require 'rspec'
+require_relative 'spec_helper'
 require_relative '../lib/lcov'
 require_relative '../lib/runners'
 require_relative '../lib/resultsprocessor'

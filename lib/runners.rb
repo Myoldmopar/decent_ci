@@ -23,9 +23,9 @@ module Runners
   end
 
   def run_single_script(this_config, cmd, env)
-    if this_config.os == 'Windows'
+    if this_config.os == 'Windows' || this_config.os == 'MacOS'
       # :nocov: Not testing on Windows
-      $logger.debug 'Unable to set timeout for process execution on windows'
+      $logger.debug 'Unable to set timeout for process execution on windows, and Mac acts funny'
       stdout, stderr, result = Open3.capture3(env, cmd)
       # :nocov:
     else

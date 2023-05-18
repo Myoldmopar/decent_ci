@@ -57,67 +57,72 @@
         <div class="clear"></div>
       </div>
 
-      <div id="content"><div id='filecontents'><h1 id="decentci">decent_ci</h1>
+      <div id="content"><div id='filecontents'><h1>decent_ci</h1>
 
-<p><a href="https://travis-ci.org/Myoldmopar/decent_ci"><img src="https://travis-ci.org/Myoldmopar/decent_ci.svg?branch=master" alt="Build Status" /></a>
-<a href="https://coveralls.io/github/Myoldmopar/decent_ci?branch=master"><img src="https://coveralls.io/repos/github/Myoldmopar/decent_ci/badge.svg?branch=master" alt="Coverage Status" /></a>
-<a href="https://codeclimate.com/github/Myoldmopar/decent_ci/maintainability"><img src="https://api.codeclimate.com/v1/badges/2ec29367c38e431d4b8a/maintainability" alt="Maintainability" /></a></p>
+<p><a href="https://github.com/Myoldmopar/decent_ci/actions/workflows/rubocop.yml"><img src="https://github.com/Myoldmopar/decent_ci/actions/workflows/rubocop.yml/badge.svg" alt="RuboCop"></a>
+<a href="https://github.com/Myoldmopar/decent_ci/actions/workflows/test.yml"><img src="https://github.com/Myoldmopar/decent_ci/actions/workflows/test.yml/badge.svg" alt="Unit Tests"></a>
+<a href="https://coveralls.io/github/Myoldmopar/decent_ci?branch=master"><img src="https://coveralls.io/repos/github/Myoldmopar/decent_ci/badge.svg?branch=master" alt="Coverage Status"></a>
+<a href="https://codeclimate.com/github/Myoldmopar/decent_ci/maintainability"><img src="https://api.codeclimate.com/v1/badges/2ec29367c38e431d4b8a/maintainability" alt="Maintainability"></a></p>
 
-<p>Forked from https://github.com/lefticus/decent_ci, tailored to <a href="https://github.com/NREL/EnergyPlus">EnergyPlus </a> specific needs.  If you are using this fork of it for anything other than EnergyPlus, please be aware we are not guaranteeing anything stable here.</p>
+<p>Forked from <a href="https://github.com/lefticus/decent_ci">https://github.com/lefticus/decent_ci</a>, tailored to <a href="https://github.com/NREL/EnergyPlus">EnergyPlus </a> specific needs.  If you are using this fork of it for anything other than EnergyPlus, please be aware we are not guaranteeing anything stable here.</p>
 
 <p>Decent CI is a decentralized continuous integration system for cmake based projects designed for use with github.</p>
 
-<p>It queries a given repository for a the set of branches, releases and pull request. The project is written in ruby and requires:</p>
+<p>It queries a given repository for a the set of branches and pull requests. The project is written in ruby and requires:</p>
 
 <ul>
-  <li>ruby
-    <ul>
-      <li>octokit gem</li>
-      <li>activesupport gem</li>
-    </ul>
-  </li>
-  <li>git</li>
+<li>ruby
+
+<ul>
+<li>octokit gem</li>
+<li>activesupport gem</li>
+</ul></li>
+<li>git</li>
 </ul>
 
-<p>To configure your application for use with Decent CI, you need put approriate <code>.decent_ci*.yml</code> files in the root of your project. Only branches / tags which contain the required files will be tested.</p>
+<p>To configure your application for use with Decent CI, you need put appropriate <code>.decent_ci*.yml</code> files in the root of your project. Only branches which contain the required files will be tested.</p>
 
 <p>Examples can be found in the <a href="confs">confs</a> folder.</p>
 
 <p>Decent CI is tested on Windows, Linux and MacOS.</p>
 
-<h1 id="windows-installation--usage">Windows Installation / Usage</h1>
+<h1>Windows Installation / Usage</h1>
 
 <p>TO BE UPDATED</p>
 
 <ol>
-  <li>Install git bash http://git-scm.com/download/win</li>
-  <li>Install python https://www.python.org/downloads/ add it to the path (needed for energyplus regressions)</li>
-  <li>Install ruby 2.0+ http://rubyinstaller.org/downloads/ add it to the path</li>
-  <li>Install cmake http://www.cmake.org/cmake/resources/software.html add it to the path</li>
-  <li>Install mingw fortran if desired (for EnergyPlus) add it to the path</li>
-  <li>Download the updated windows ssl certificate file and add <code>SSL_CERT_FILE</code> environment variable pointing to it. See here: https://gist.github.com/fnichol/867550</li>
-  <li><code>gem install octokit activesupport</code></li>
-  <li>Get gist from here https://gist.github.com/lefticus/10914850</li>
-  <li>Create github token for the user</li>
-  <li>Launch git bash, execute <code>ruby ./run_ci.rb &lt;build_folder&gt; &lt;true/false test mode&gt; &lt;token&gt; &lt;respository&gt;</code></li>
+<li>Install git bash <a href="http://git-scm.com/download/win">http://git-scm.com/download/win</a></li>
+<li>Install python <a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a> add it to the path (needed for energyplus regressions)</li>
+<li>Install ruby 2.0+ <a href="http://rubyinstaller.org/downloads/">http://rubyinstaller.org/downloads/</a> add it to the path</li>
+<li>Install cmake <a href="http://www.cmake.org/cmake/resources/software.html">http://www.cmake.org/cmake/resources/software.html</a> add it to the path</li>
+<li>Install mingw fortran if desired (for EnergyPlus) add it to the path</li>
+<li>Download the updated windows ssl certificate file and add <code>SSL_CERT_FILE</code> environment variable pointing to it. See here: <a href="https://gist.github.com/fnichol/867550">https://gist.github.com/fnichol/867550</a></li>
+<li><code>gem install octokit activesupport</code></li>
+<li>Get gist from here <a href="https://gist.github.com/lefticus/10914850">https://gist.github.com/lefticus/10914850</a></li>
+<li>Create github token for the user</li>
+<li>Launch git bash, execute <code>ruby ./run_ci.rb &lt;build_folder&gt; &lt;true/false test mode&gt; &lt;token&gt; &lt;respository&gt;</code></li>
 </ol>
 
-<h1 id="macos-installation--usage">MacOS Installation / Usage</h1>
-
-<p>TO BE UPDATED</p>
+<h1>MacOS Installation / Usage</h1>
 
 <ol>
-  <li>Install ruby gems octokit and activesupport. You will need to follow these instructions http://stackoverflow.com/questions/22352838/ruby-gem-install-json-fails-on-mavericks-and-xcode-5-1-unknown-argument-mul</li>
-  <li><code>sudo gem install octokit activesupport</code></li>
-  <li>Get gist from here https://gist.github.com/lefticus/10914850</li>
-  <li>Create github token for the user</li>
-  <li>Execute <code>ruby ./run_ci.rb &lt;build_folder&gt; &lt;true/false test mode&gt; &lt;token&gt; &lt;respository&gt;</code></li>
+<li>Install ruby gems octokit and activesupport. You may need to follow these instructions <a href="http://stackoverflow.com/questions/22352838/ruby-gem-install-json-fails-on-mavericks-and-xcode-5-1-unknown-argument-mul">http://stackoverflow.com/questions/22352838/ruby-gem-install-json-fails-on-mavericks-and-xcode-5-1-unknown-argument-mul</a>, then  <code>sudo gem install octokit activesupport</code></li>
+<li>Need to get-pip: <code>curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py</code>, then <code>sudo python get-pip.py</code></li>
+<li>Install Python deps: <code>sudo pip install boto beautifulsoup4 soupsieve</code></li>
+<li>Install CMake (download from web), install command line tools</li>
+<li>Install GFortran (download from <a href="https://github.com/fxcoudert/gfortran-for-macOS/releases">https://github.com/fxcoudert/gfortran-for-macOS/releases</a>)</li>
+<li>Install MacTeX (download from web)</li>
+<li>Install IFW (download from <a href="https://download.qt.io/official_releases/qt-installer-framework/">https://download.qt.io/official_releases/qt-installer-framework/</a>)</li>
+<li>You&#39;ll then want to symlink the binarycreator somewhere on PATH so CMake picks it up</li>
+<li>Need to consider CCache</li>
+<li>Get gist from here <a href="https://gist.github.com/c51580a92556ef344216c22ec390aa31.git">https://gist.github.com/c51580a92556ef344216c22ec390aa31.git</a></li>
+<li>Create github token for the user</li>
+<li>Execute <code>ruby ./run_ci.rb &lt;build_folder&gt; &lt;true/false test mode&gt; &lt;token&gt; &lt;respository&gt;</code></li>
 </ol>
 
-<h1 id="linux-installation--usage">Linux Installation / Usage</h1>
+<h1>Linux Installation / Usage</h1>
 
-<p><code>
-sudo apt-get install git cmake g++ gfortran cmake-curses-gui curl ccache python-pip texlive-full valgrind lcov gcovr clang-format cppcheck
+<pre class="code ruby"><code class="ruby">sudo apt-get install git cmake g++ gfortran cmake-curses-gui curl ccache python-pip texlive-full valgrind lcov gcovr clang-format cppcheck
 pip install boto beautifulsoup4 soupsieve
 sudo gem install activesupport octokit
 cd ~
@@ -125,13 +130,21 @@ mkdir ~/ci
 git clone https://gist.github.com/c51580a92556ef344216c22ec390aa31.git ci_script
 cd ci_script
 ruby run_ci.rb ~/ci &lt;AWS_STUFF&gt; &lt;true/false test mode&gt; &lt;GH_TOKEN&gt; NREL/EnergyPlus
-</code></p>
+</code></pre>
+
+<h1>Documentation</h1>
+
+<p>Documentation is currently stubbed out, and needs to be fully fleshed out.
+In any case, the docs are built using Yard.
+To get started, <code>gem install yard</code> or bundle it from the doc section of the Gemfile.
+Then from the root of the repo, just run <code>yardoc</code>, and it will scan the lib directory, generating html docs and dropping them into the <code>docs/</code> folder.
+GitHub then hosts the documentation on the GitHub page: <a href="https://myoldmopar.github.io/decent_ci/">https://myoldmopar.github.io/decent_ci/</a> </p>
 </div></div>
 
       <div id="footer">
-  Generated on Wed May 29 12:01:51 2019 by
+  Generated on Thu May 18 10:34:59 2023 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.9.19 (ruby-2.5.1).
+  0.9.19 (ruby-2.7.0).
 </div>
 
     </div>

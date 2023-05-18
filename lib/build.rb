@@ -34,26 +34,6 @@ class Build
     github_check_rate_limit(@client.last_response.headers)
   end
 
-  def query_releases
-    releases = github_query(@client) { @client.releases(@repository) }
-
-    releases.each do |r|
-      begin
-        days = (DateTime.now - DateTime.parse(r.published_at.to_s)).round
-        if days <= @max_age
-          @potential_builds << PotentialBuild.new(@client, @token, @repository, r.tag_name, nil, nil, r.author.login, r.url, r.assets, nil, nil, nil)
-          $logger.info("Found a tag to add to potential_builds: #{r.tag_name}")
-        else
-          $logger.info("Skipping potential tag (#{r.tag_name}), it hasn't been updated in #{days} days")
-        end
-      rescue DecentCIKnownError => e
-        $logger.info("Skipping potential tag (#{r.tag_name}): #{e}")
-      rescue => e
-        $logger.info("Skipping potential tag (#{r.tag_name}): #{e} #{e.backtrace}")
-      end
-    end
-  end
-
   def query_branches
     # TODO: properly handle paginated results from github
     branches = github_query(@client) { @client.branches(@repository, :per_page => 100) }

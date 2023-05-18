@@ -1,5 +1,6 @@
 require 'rbconfig'
 require 'rspec'
+require_relative 'spec_helper'
 require_relative '../lib/runners'
 
 class DummyConfig
