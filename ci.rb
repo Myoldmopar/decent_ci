@@ -8,6 +8,7 @@ require_relative 'cleanup.rb'
 require 'optparse'
 
 $logger = Logger.new "decent_ci.log", 10
+# logger.datetime_format = '%Y-%m-%d %H:%M:%S'
 $created_dirs = []
 $current_log_repository = nil
 $current_log_deviceid = nil
