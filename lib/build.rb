@@ -103,7 +103,7 @@ class Build
           # while looking through repo-branches, check if there is a PR associated and give it a PR num if so
           associated_pr_num = branch_to_pr_number.fetch(b.name, nil)
 
-          @potential_builds << PotentialBuild.new(@client, @token, @repository, b.commit.sha, b.name, login, associated_pr_num, nil, nil)
+          @potential_builds << PotentialBuild.new(@client, @token, @repository, b.commit.sha, b.name, login, associated_pr_num, @repository, nil)
           # pb = @potential_builds[-1]
           # $logger.info("Found a branch to add to potential_builds: #{b.name}")
           # $logger.info("ASSOCIATED PR NUMBER IS: #{associated_pr_num}")
