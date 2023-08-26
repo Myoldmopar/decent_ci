@@ -30,7 +30,7 @@ class PotentialBuild
   include Lcov
   include Runners
 
-  attr_reader :tag_name, :commit_sha, :branch_name, :repository
+  attr_reader :tag_name, :commit_sha, :branch_name, :repository, :pull_id
   attr_accessor :test_run, :failure
 
   def initialize(client, token, repository, commit_sha, branch_name, author, # rubocop:disable Metrics/ParameterLists
