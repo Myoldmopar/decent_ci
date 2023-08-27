@@ -8,6 +8,7 @@ require_relative 'cleanup.rb'
 require 'optparse'
 
 $logger = Logger.new "decent_ci.log", 10
+# logger.datetime_format = '%Y-%m-%d %H:%M:%S'
 $created_dirs = []
 $current_log_repository = nil
 $current_log_deviceid = nil
@@ -183,8 +184,7 @@ did_any_builds = false
     test_mode = !(ARGV[0] =~ /false/i)
 
     $logger.info "Querying for updated branches"
-    b.query_branches
-    b.query_pull_requests
+    b.query_for_new_builds
 
     did_daily_task = false
 
@@ -210,47 +210,11 @@ did_any_builds = false
       end
     }
 
-    if did_daily_task
-      b.pull_request_details.each {|d|
-
-        $logger.debug "PullRequestDetail: #{d}"
-
-        days = (DateTime.now - DateTime.parse(d[:last_updated].to_s)).round
-
-        references = ""
-
-        d[:notification_users].each {|u|
-          references += "@#{u} "
-        }
-
-        message_to_post = "#{references}it has been #{days} days since this pull request was last updated."
-
-        $logger.debug "Message: #{message_to_post}"
-
-        if days >= d[:aging_pull_requests_numdays]
-          if d[:aging_pull_requests_notification]
-            $logger.info "Posting Message: #{message_to_post} to issue #{d[:id]}"
-            if !test_mode
-              b.client.add_comment(d[:repo], d[:id], message_to_post)
-            else
-              $logger.info "Not actually posting pull request, test mode"
-            end
-          else
-            $logger.info "Not posting pull request age message, posting is disabled for this branch"
-          end
-        else
-          $logger.info "Not posting pull request age message, only post every #{d[:aging_pull_requests_numdays]} days"
-        end
-      }
-    end
-
     # loop over each potential build
     b.potential_builds.each {|p|
 
       if p.branch_name
         $logger.info "Working on branch \"#{p.branch_name}\": Looping over compilers"
-      elsif p.tag_name
-        $logger.info "Working on tag \"#{p.tag_name}\": Looping over compilers"
       end
 
       p.compilers.each {|compiler|
@@ -282,7 +246,7 @@ did_any_builds = false
                 FileUtils.rm_rf(p.this_src_dir)
               end
 
-              # Now we have a fully built and packaged up branch build, time to build the baseline if applicable
+              # Time to build the baseline if applicable
               if p.needs_regression_test(compiler) && regression_base
                 regression_base.set_as_baseline
                 regression_base.test_run = test_mode
@@ -300,7 +264,7 @@ did_any_builds = false
                 regression_base.do_test compiler, nil
               end
 
-              # Now we have a built branch and baseline if applicable, time to run tests and push results.
+              # Now build and test this branch and push results
               p.do_test compiler, regression_base
               p.do_coverage compiler
               p.do_upload compiler

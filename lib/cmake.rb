@@ -4,12 +4,11 @@ require_relative 'runners'
 
 # simple data class for passing args into cmake_build
 class CMakeBuildArgs
-  attr_reader :build_type, :this_device_id, :this_running_extra, :is_release
+  attr_reader :build_type, :this_device_id
 
-  def initialize(build_type, device_id, is_release = false)
+  def initialize(build_type, device_id)
     @build_type = build_type
     @this_device_id = device_id
-    @is_release = is_release
   end
 end
 
@@ -24,11 +23,6 @@ module CMake
 
     compiler_extra_flags = compiler[:compiler_extra_flags]
     compiler_extra_flags = '' if compiler_extra_flags.nil?
-
-    if cmake_build_args.is_release
-      extra_flags = compiler[:release_build_cmake_extra_flags]
-      cmake_flags = "#{cmake_flags} #{extra_flags}" unless extra_flags.nil?
-    end
 
     if compiler[:cc_bin].nil?
       env = {
@@ -81,7 +75,7 @@ module CMake
       )
     end
 
-    cmake_result = process_cmake_results(src_dir, build_dir, err, result, false)
+    cmake_result = process_cmake_results(src_dir, build_dir, err, result)
 
     return false unless cmake_result
 
@@ -102,7 +96,7 @@ module CMake
 
     msvc_success = process_msvc_results(src_dir, build_dir, out, result)
     gcc_success = process_gcc_results(src_dir, build_dir, err, result)
-    process_cmake_results(src_dir, build_dir, err, result, false)
+    process_cmake_results(src_dir, build_dir, err, result)
     process_python_results(src_dir, build_dir, out, err, result)
     msvc_success && gcc_success
   end
@@ -146,7 +140,7 @@ module CMake
       @test_messages.concat(test_messages)
 
       # may as well see if there are some cmake results to pick up here
-      process_cmake_results(src_dir, build_dir, test_stderr, test_result, false)
+      process_cmake_results(src_dir, build_dir, test_stderr, test_result)
     end
   end
 end

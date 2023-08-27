@@ -10,6 +10,7 @@ gem 'octokit'
 # there are some gems we use for testing the codebase -- not needed for actual use of the library
 group :test do
   gem 'coveralls_reborn', '~> 0.20.0', require: false
+  gem 'pry'
   gem 'rake'
   gem 'rspec'
   gem 'rubocop', '1.11.0'

@@ -171,51 +171,51 @@ describe 'ResultsProcessor Testing' do
   context 'when calling process_cmake_results' do
     it 'should handle no data' do
       @build_results = SortedSet.new
-      process_cmake_results('/src/dir', '/build/dir', '',0, false)
+      process_cmake_results('/src/dir', '/build/dir', '', 0)
       expect(@build_results.length).to eql 0
     end
     it 'should match on a few different formats' do
       @build_results = SortedSet.new
       stderr = 'CMake Error: Hey there'
-      process_cmake_results('/src/dir', '/build/dir', stderr,0, false)
+      process_cmake_results('/src/dir', '/build/dir', stderr, 0)
       expect(@build_results.length).to eql 1
       @build_results = SortedSet.new
       stderr = 'ERROR: Hey there'
-      process_cmake_results('/src/dir', '/build/dir', stderr,0, false)
+      process_cmake_results('/src/dir', '/build/dir', stderr, 0)
       expect(@build_results.length).to eql 1
       @build_results = SortedSet.new
       stderr = 'WARNING: Hey there'
-      process_cmake_results('/src/dir', '/build/dir', stderr,0, false)
+      process_cmake_results('/src/dir', '/build/dir', stderr, 0)
       expect(@build_results.length).to eql 1
       @build_results = SortedSet.new
       stderr = 'CMake Error at CMakeLists.txt:33 (d):'
-      process_cmake_results('/src/dir', '/build/dir', stderr,0, false)
+      process_cmake_results('/src/dir', '/build/dir', stderr, 0)
       expect(@build_results.length).to eql 1
       @build_results = SortedSet.new
       stderr = 'main.f90:32:'
-      process_cmake_results('/src/dir', '/build/dir', stderr,0, false)
+      process_cmake_results('/src/dir', '/build/dir', stderr, 0)
       expect(@build_results.length).to eql 1
       @build_results = SortedSet.new
       stderr = 'main.cc:32:'
-      process_cmake_results('/src/dir', '/build/dir', stderr,0, false)
+      process_cmake_results('/src/dir', '/build/dir', stderr, 0)
       expect(@build_results.length).to eql 1
     end
     it 'should handle odd long cmake messages' do
       @build_results = SortedSet.new
       stderr = "CMake Error at CMakeLists.txt:33 (d):\nI am on a second line"
-      process_cmake_results('/src/dir', '/build/dir', stderr,0, false)
+      process_cmake_results('/src/dir', '/build/dir', stderr, 0)
       expect(@build_results.length).to eql 1
     end
     it 'should handle another odd long cmake message' do
       @build_results = SortedSet.new
       stderr = "CMake Error at CMakeLists.txt:33 (d):\n "
-      process_cmake_results('/src/dir', '/build/dir', stderr,0, false)
+      process_cmake_results('/src/dir', '/build/dir', stderr, 0)
       expect(@build_results.length).to eql 1
     end
     it 'should keep context between two lines' do
       @build_results = SortedSet.new
       stderr = "CMake Error: Hey there\nI am on a second line"
-      process_cmake_results('/src/dir', '/build/dir', stderr,0, false)
+      process_cmake_results('/src/dir', '/build/dir', stderr, 0)
       expect(@build_results.length).to eql 1
       @build_results.each do |br|
         expect(br.message).to include 'there'

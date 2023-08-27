@@ -20,7 +20,7 @@ require_relative 'github'
 
 # Top level class that loads the list of potential builds from github
 class Build
-  attr_reader :client, :pull_request_details
+  attr_reader :client
   attr_accessor :potential_builds
 
   def initialize(token, repository, max_age)
@@ -34,10 +34,46 @@ class Build
     github_check_rate_limit(@client.last_response.headers)
   end
 
-  def query_branches
+  def query_for_new_builds
+    # Keep a mapping of branch name -> PR number for PRs which are based on non-fork branches
+    # That way we can try to comment on the PRs for any associated PR, whether internal or external
+    # The only time we will have to revert to commenting on a commit itself is if it is a non-fork branch without a PR
+    branch_to_pr_number = {}
+
+    # Thiu section scans for 'external' pull_requests (PRs from repo branches are built as separate branches)
+    # This line is where we want to add :accept => 'application/vnd.github.shadow-cat-preview+json' for draft PRs
+    pull_requests = github_query(@client) { @client.pull_requests(@repository, :state => 'open', :per_page => 50) }
+    pull_requests.each do |p|
+      # TODO: p.head.repo can be null if the fork repo is deleted.  Need to protect that here.
+      if p.head.repo.nil?
+        $logger.info("Skipping potential PR (#{p.number}): Forked repo is null (deleted?)")
+      else
+        begin
+          pb = PotentialBuild.new(@client, @token, p.head.repo.full_name, p.head.sha, p.head.ref, p.head.user.login, p.number, p.base.repo.full_name, p.base.ref, nil)
+
+          if p.head.repo.full_name == p.base.repo.full_name
+            # we wont build "internal" PRs in this block, but we will save a map from branch name to PR number
+            $logger.info("Skipping pull-request originating from head repo: #{p.number}")
+            branch_to_pr_number[p.head.ref] = p.number
+            $logger.info("  ...but matching branch to pr_number: #{p.head.ref} => #{p.number}")
+          else
+            $logger.info("Found an external PR to add to potential_builds: #{p.number}")
+            @potential_builds << pb
+          end
+        rescue DecentCIKnownError => e
+          $logger.info("Skipping potential PR (#{p.number}): #{e}")
+        rescue => e
+          $logger.info("Skipping potential PR (#{p.number}): #{e} #{e.backtrace}")
+        end
+      end
+    end
+
+    # require 'pry'; binding.pry
+
+    # $logger.info("Full hash of branch name to PR number: #{branch_to_pr_number}")
+
     # TODO: properly handle paginated results from github
     branches = github_query(@client) { @client.branches(@repository, :per_page => 100) }
-
     branches.each do |b|
       if b.name.include?('#')
         $logger.warn("Skipping branch that starts with hash symbol: #{b.name}")
@@ -66,8 +102,9 @@ class Build
             login = branch_details.commit.author.login
           end
 
-          @potential_builds << PotentialBuild.new(@client, @token, @repository, nil, b.commit.sha, b.name, login, nil, nil, nil, nil, nil)
-          $logger.info("Found a branch to add to potential_builds: #{b.name}")
+          # while looking through repo-branches, check if there is a PR associated and give it a PR num if so
+          associated_pr_num = branch_to_pr_number.fetch(b.name, nil)
+          @potential_builds << PotentialBuild.new(@client, @token, @repository, b.commit.sha, b.name, login, nil, @repository, nil, associated_pr_num)
         else
           $logger.info("Skipping potential build (#{b.name}), it hasn't been updated in #{days} days")
         end
@@ -76,69 +113,6 @@ class Build
       rescue => e
         $logger.info("Skipping potential branch (#{b.name}): #{e} #{e.backtrace}")
       end
-    end
-  end
-
-  # note, only builds 'external' pull_requests. Internal ones would have already
-  # been built as a branch
-  def query_pull_requests
-    # This line is where we want to add :accept => 'application/vnd.github.shadow-cat-preview+json' for draft PRs
-    pull_requests = github_query(@client) { @client.pull_requests(@repository, :state => 'open', :per_page => 50) }
-
-    @pull_request_details = []
-
-    pull_requests.each do |p|
-      issue = github_query(@client) { @client.issue(@repository, p.number) }
-
-      $logger.debug("Issue loaded: #{issue}")
-
-      notification_users = Set.new
-
-      notification_users << issue.assignee.login if issue.assignee
-
-      notification_users << p.user.login if p.user.login
-
-      aging_pull_requests_notify = true
-      aging_pull_requests_num_days = 7
-
-      # TODO: p.head.repo can be null if the fork repo is deleted.  Need to protect that here.
-      if p.head.repo.nil?
-        $logger.info("Skipping potential PR (#{p.number}): Forked repo is null (deleted?)")
-      else
-        begin
-          pb = PotentialBuild.new(@client, @token, p.head.repo.full_name, nil, p.head.sha, p.head.ref, p.head.user.login, nil, nil, p.number, p.base.repo.full_name, p.base.ref)
-          configured_notifications = pb.configuration.notification_recipients
-          unless configured_notifications.nil?
-            $logger.debug("Merging notifications user: #{configured_notifications}")
-            notification_users.merge(configured_notifications)
-          end
-
-          aging_pull_requests_notify = pb.configuration.aging_pull_requests_notification
-          aging_pull_requests_num_days = pb.configuration.aging_pull_requests_numdays
-
-          if p.head.repo.full_name == p.base.repo.full_name
-            $logger.info("Skipping pull-request originating from head repo: #{p.number}")
-          else
-            $logger.info("Found an external PR to add to potential_builds: #{p.number}")
-            @potential_builds << pb
-          end
-        rescue DecentCIKnownError => e
-          $logger.info("Skipping potential PR (#{p.number}): #{e}")
-        rescue => e
-          $logger.info("Skipping potential PR (#{p.number}): #{e} #{e.backtrace}")
-        end
-      end
-      # TODO: Should this be here?
-      @pull_request_details << {
-        :id => p.number,
-        :creator => p.user.login,
-        :owner => (issue.assignee ? issue.assignee.login : nil),
-        :last_updated => issue.updated_at,
-        :repo => @repository,
-        :notification_users => notification_users,
-        :aging_pull_requests_notification => aging_pull_requests_notify,
-        :aging_pull_requests_numdays => aging_pull_requests_num_days
-      }
     end
   end
 

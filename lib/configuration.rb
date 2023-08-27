@@ -178,10 +178,8 @@ module Configuration
     description
   end
 
-  def setup_compiler_extra_flags(compiler, is_release)
-    if is_release && !compiler[:cmake_extra_flags_release].nil?
-      compiler[:cmake_extra_flags_release]
-    elsif compiler[:cmake_extra_flags].nil?
+  def setup_compiler_extra_flags(compiler)
+    if compiler[:cmake_extra_flags].nil?
       ''
     else
       compiler[:cmake_extra_flags]
@@ -247,7 +245,7 @@ module Configuration
     [cc_bin, cxx_bin]
   end
 
-  def setup_single_compiler(compiler, is_release)
+  def setup_single_compiler(compiler)
     compiler[:architecture] = setup_compiler_architecture(compiler)
     compiler[:version] = setup_compiler_version(compiler)
     compiler[:cc_bin], compiler[:cxx_bin] = setup_gcc_style_cc_and_cxx(compiler)
@@ -265,7 +263,7 @@ module Configuration
     compiler[:coverage_enabled] = false if compiler[:coverage_enabled].nil?
     compiler[:coverage_pass_limit] = 90 if compiler[:coverage_pass_limit].nil?
     compiler[:coverage_warn_limit] = 75 if compiler[:coverage_warn_limit].nil?
-    compiler[:cmake_extra_flags] = setup_compiler_extra_flags(compiler, is_release)
+    compiler[:cmake_extra_flags] = setup_compiler_extra_flags(compiler)
     compiler[:num_parallel_builds] = setup_compiler_num_processors(compiler)
 
     raise CannotMatchCompiler, 'Decent CI currently only deployed with Visual Studio version 16 (2019)' if compiler[:name] =~ /.*Visual Studio.*/i && compiler[:version] != 16
@@ -273,7 +271,7 @@ module Configuration
     compiler
   end
 
-  def load_configuration(location, ref, is_release)
+  def load_configuration(location, ref)
     # first get a list of all decent_ci files found at the root of the repo, and raise if none were found
     fileset = Set.new
     @client.content(location, :path => '.', :ref => ref).each do |path|
@@ -300,7 +298,7 @@ module Configuration
     # loop over all compilers and fill in defaults and check for erroneous conditions
     configuration.compilers.each do |compiler|
       $logger.debug("Working on compiler: #{compiler[:name]}")
-      setup_single_compiler(compiler, is_release)
+      setup_single_compiler(compiler)
     end
 
     # do final touchups on the configuration

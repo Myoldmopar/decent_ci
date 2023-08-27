@@ -176,13 +176,9 @@ describe 'Configuration Testing' do
     end
   end
   context 'when calling setup_compiler_extra_flags' do
-    it 'should return the correct flags for non-releases' do
-      expect(setup_compiler_extra_flags({:cmake_extra_flags => '-dg 1'}, false)).to eql '-dg 1'
-      expect(setup_compiler_extra_flags({}, false)).to eql ''
-    end
-    it 'should return the correct flags for release builds' do
-      expect(setup_compiler_extra_flags({:cmake_extra_flags => '-dg 1', :cmake_extra_flags_release => '-dg 2'}, true)).to eql '-dg 2'
-      expect(setup_compiler_extra_flags({}, true)).to eql ''
+    it 'should return the correct flags' do
+      expect(setup_compiler_extra_flags({:cmake_extra_flags => '-dg 1'})).to eql '-dg 1'
+      expect(setup_compiler_extra_flags({})).to eql ''
     end
   end
   context 'when calling setup_compiler_num_processors' do
@@ -326,7 +322,7 @@ describe 'Configuration Testing' do
 
     end
     it 'should accept a compiler with the minimal fields' do
-      filled_compiler = setup_single_compiler({:name => "gcc"}, false)
+      filled_compiler = setup_single_compiler({:name => "gcc"})
       expect(filled_compiler).to include :cc_bin
       expect(filled_compiler).to include :cxx_bin
       expect(filled_compiler).to include :version
@@ -341,7 +337,7 @@ describe 'Configuration Testing' do
     it 'should properly set up all compilers and other settings of all configurations' do
       allow_any_instance_of(Octokit::Client).to receive(:content).and_return([NamedDummy.new('.decent_ci.yaml')])
       @client = Octokit::Client.new(:access_token => 'abc')
-      configuration = load_configuration('spec/resources', 'abc', false)
+      configuration = load_configuration('spec/resources', 'abc')
       expect(configuration.compilers.first[:name]).to eql 'gcc'
     end
     it 'should test lots more configuraitons' do
