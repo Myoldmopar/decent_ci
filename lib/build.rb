@@ -49,13 +49,13 @@ class Build
         $logger.info("Skipping potential PR (#{p.number}): Forked repo is null (deleted?)")
       else
         begin
-          pb = PotentialBuild.new(@client, @token, p.head.repo.full_name, p.head.sha, p.head.ref, p.head.user.login, p.number, p.base.repo.full_name, p.base.ref)
+          pb = PotentialBuild.new(@client, @token, p.head.repo.full_name, p.head.sha, p.head.ref, p.head.user.login, p.number, p.base.repo.full_name, p.base.ref, nil)
 
           if p.head.repo.full_name == p.base.repo.full_name
             # we wont build "internal" PRs in this block, but we will save a map from branch name to PR number
             $logger.info("Skipping pull-request originating from head repo: #{p.number}")
             branch_to_pr_number[p.head.ref] = p.number
-            $logger.info("  ...but adding branch name to pr_number hash: #{p.head.ref} => #{p.number}")
+            $logger.info("  ...but matching branch to pr_number: #{p.head.ref} => #{p.number}")
           else
             $logger.info("Found an external PR to add to potential_builds: #{p.number}")
             @potential_builds << pb
@@ -67,6 +67,8 @@ class Build
         end
       end
     end
+
+    # require 'pry'; binding.pry
 
     # $logger.info("Full hash of branch name to PR number: #{branch_to_pr_number}")
 
@@ -102,15 +104,7 @@ class Build
 
           # while looking through repo-branches, check if there is a PR associated and give it a PR num if so
           associated_pr_num = branch_to_pr_number.fetch(b.name, nil)
-
-          @potential_builds << PotentialBuild.new(@client, @token, @repository, b.commit.sha, b.name, login, associated_pr_num, @repository, nil)
-          # pb = @potential_builds[-1]
-          # $logger.info("Found a branch to add to potential_builds: #{b.name}")
-          # $logger.info("ASSOCIATED PR NUMBER IS: #{associated_pr_num}")
-          # if !pb.pull_id.nil?
-          #   File.open("/tmp/testcomment.txt", 'w') { |f| f.write("Hi, I'm a pretend comment on a PR I hope") }
-          #   github_query(@client) { @client.add_comment("NREL/EnergyPlus", pb.pull_id, "OK I am the test comment text :)") }
-          # end
+          @potential_builds << PotentialBuild.new(@client, @token, @repository, b.commit.sha, b.name, login, nil, @repository, nil, associated_pr_num)
         else
           $logger.info("Skipping potential build (#{b.name}), it hasn't been updated in #{days} days")
         end

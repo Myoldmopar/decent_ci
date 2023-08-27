@@ -30,11 +30,12 @@ class PotentialBuild
   include Lcov
   include Runners
 
-  attr_reader :tag_name, :commit_sha, :branch_name, :repository, :pull_id
-  attr_accessor :test_run, :failure
+  attr_reader :tag_name, :commit_sha, :branch_name, :repository
+  attr_accessor :test_run, :failure, :pr_num_to_use_for_comment
 
   def initialize(client, token, repository, commit_sha, branch_name, author, # rubocop:disable Metrics/ParameterLists
-                 pull_id, pr_base_repository, pr_base_ref)
+                 pull_id, pr_base_repository, pr_base_ref, pr_num_to_use_for_comment = nil)
+    @pr_num_to_use_for_comment = pr_num_to_use_for_comment
     @client = client
     @config = load_configuration(repository, commit_sha)
     @config.repository_name = github_query(@client) { @client.repo(repository).name }
@@ -128,7 +129,7 @@ class PotentialBuild
     # TODO: update this to be a merge, not just a checkout of the pull request branch
     FileUtils.mkdir_p src_dir
 
-    if @acting_as_baseline || @pull_id.nil?
+    if @pull_id.nil?
       $logger.info("Checking out branch \"#{@refspec}\"")
       _, _, result = run_scripts(
         @config,
@@ -867,7 +868,9 @@ class PotentialBuild
       end
 
       if !pending && @config.post_results_comment
-        if !@pull_id.nil?
+        if !@pr_num_to_use_for_comment.nil?
+          github_query(@client) { @client.add_comment(@config.repository, @pr_num_to_use_for_comment, github_document) }
+        elsif !@pull_id.nil?
           github_query(@client) { @client.add_comment(@config.repository, @pull_id, github_document) }
         elsif !@commit_sha.nil? && @repository == @config.repository
           github_query(@client) { @client.create_commit_comment(@config.repository, @commit_sha, github_document) }

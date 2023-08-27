@@ -239,7 +239,7 @@ end
 
 class DummyPotentialBuild
   attr_reader :branch_name
-  attr_accessor :pr
+  attr_accessor :pr, :pr_num_to_use_for_comment
   def initialize(branch_name)
     @branch_name = branch_name
   end
@@ -249,11 +249,14 @@ class DummyPotentialBuild
   def pull_request?
     @pr
   end
+  def pr_num_to_use_for_comment
+    nil
+  end
 end
 
 describe 'Build Testing' do
   context 'when calling query_for_new_builds' do
-    it 'should include all valid and new builds (3 branches 1 PR' do
+    it 'should include all valid and new builds (3 branches 1 PR)' do
       allow(Octokit::Client).to receive(:new).and_return(DummyClient2.new)
       allow(PotentialBuild).to receive(:new).and_return(true)
       b = Build.new('abcdef', 'spec/resources', 10)
