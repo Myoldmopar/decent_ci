@@ -129,7 +129,7 @@ class PotentialBuild
     # TODO: update this to be a merge, not just a checkout of the pull request branch
     FileUtils.mkdir_p src_dir
 
-    if @pull_id.nil?
+    if @acting_as_baseline || @pull_id.nil?
       $logger.info("Checking out branch \"#{@refspec}\"")
       _, _, result = run_scripts(
         @config,
