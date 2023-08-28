@@ -31,7 +31,7 @@ class PotentialBuild
   include Runners
 
   attr_reader :tag_name, :commit_sha, :branch_name, :repository
-  attr_accessor :test_run, :failure, :pr_num_for_comment
+  attr_accessor :test_run, :failure
 
   def initialize(client, token, repository, tag_name, commit_sha, branch_name, author, release_url, release_assets, # rubocop:disable Metrics/ParameterLists
                  pull_id, pr_base_repository, pr_base_ref)
