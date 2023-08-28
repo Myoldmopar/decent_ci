@@ -31,7 +31,7 @@ class PotentialBuild
   include Runners
 
   attr_reader :tag_name, :commit_sha, :branch_name, :repository
-  attr_accessor :test_run, :failure
+  attr_accessor :test_run, :failure, :pr_num_for_comment
 
   def initialize(client, token, repository, tag_name, commit_sha, branch_name, author, release_url, release_assets, # rubocop:disable Metrics/ParameterLists
                  pull_id, pr_base_repository, pr_base_ref)
@@ -84,6 +84,11 @@ class PotentialBuild
     @valgrind_counters_results = nil
     @perf_counters_results = nil
     @file_sizes = nil
+    @pr_num_for_comment = nil
+  end
+
+  def assign_pr_num_for_comment(pr_num)
+    @pr_num_for_comment = pr_num
   end
 
   def set_as_baseline
@@ -936,7 +941,9 @@ class PotentialBuild
       end
 
       if !pending && @config.post_results_comment
-        if !@commit_sha.nil? && @repository == @config.repository
+        if !@pr_num_for_comment.nil?
+          github_query(@client) { @client.add_comment(@config.repository, @pr_num_for_comment, github_document) }
+        elsif !@commit_sha.nil? && @repository == @config.repository
           github_query(@client) { @client.create_commit_comment(@config.repository, @commit_sha, github_document) }
         elsif !@pull_id.nil?
           github_query(@client) { @client.add_comment(@config.repository, @pull_id, github_document) }
