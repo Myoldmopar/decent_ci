@@ -200,7 +200,8 @@ module Configuration
     return compiler[:build_generator] unless compiler[:build_generator].nil?
 
     if compiler[:name].match(/.*Visual Studio.*/i)
-      case compiler.fetch('version', nil)
+      found_version = compiler.fetch(:version, nil)
+      case found_version
       when 16
         'Visual Studio 16 2019'
       when 17
