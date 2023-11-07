@@ -199,8 +199,10 @@ module Configuration
   def setup_compiler_build_generator(compiler)
     return compiler[:build_generator] unless compiler[:build_generator].nil?
 
-    if compiler[:name].match(/.*Visual Studio.*/i)
+    if compiler[:name].match(/.*Visual Studio.*/i) && compiler[:version] == 16
       'Visual Studio 16 2019'
+    elsif compiler[:name].match(/.*Visual Studio.*/i) && compiler[:version] == 17
+      'Visual Studio 17 2022'      
     else
       'Unix Makefiles'
     end
@@ -268,7 +270,7 @@ module Configuration
     compiler[:cmake_extra_flags] = setup_compiler_extra_flags(compiler, is_release)
     compiler[:num_parallel_builds] = setup_compiler_num_processors(compiler)
 
-    raise CannotMatchCompiler, 'Decent CI currently only deployed with Visual Studio version 16 (2019)' if compiler[:name] =~ /.*Visual Studio.*/i && compiler[:version] != 16
+    raise CannotMatchCompiler, 'Decent CI currently only deployed with Visual Studio version 16 (2019) and 17 (2022)' if compiler[:name] =~ /.*Visual Studio.*/i && !compiler[:version].in?([16, 17])
 
     compiler
   end
