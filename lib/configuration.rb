@@ -199,10 +199,14 @@ module Configuration
   def setup_compiler_build_generator(compiler)
     return compiler[:build_generator] unless compiler[:build_generator].nil?
 
-    if compiler[:name].match(/.*Visual Studio.*/i) && compiler[:version] == 16
-      'Visual Studio 16 2019'
-    elsif compiler[:name].match(/.*Visual Studio.*/i) && compiler[:version] == 17
-      'Visual Studio 17 2022'      
+    if compiler[:name].match(/.*Visual Studio.*/i)
+      if compiler[:version] == 16
+        'Visual Studio 16 2019'
+      elsif compiler[:version] == 17
+        'Visual Studio 17 2022'
+      else
+        raise CannotMatchCompiler, 'For Visual Studio, must specify version as either 16 or 17'
+      end
     else
       'Unix Makefiles'
     end
