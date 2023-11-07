@@ -200,9 +200,10 @@ module Configuration
     return compiler[:build_generator] unless compiler[:build_generator].nil?
 
     if compiler[:name].match(/.*Visual Studio.*/i)
-      if compiler[:version] == 16
+      case compiler[:version]
+      when 16
         'Visual Studio 16 2019'
-      elsif compiler[:version] == 17
+      when 17
         'Visual Studio 17 2022'
       else
         raise CannotMatchCompiler, 'For Visual Studio, must specify version as either 16 or 17'
