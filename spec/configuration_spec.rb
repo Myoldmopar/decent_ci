@@ -198,7 +198,7 @@ describe 'Configuration Testing' do
       expect(setup_compiler_build_generator({:build_generator => 'Already here'})).to eql 'Already here'
       expect(setup_compiler_build_generator({:name => 'Visual Studio', :version => 16})).to include 'Visual Studio'
       expect(setup_compiler_build_generator({:name => 'Visual Studio', :version => 17})).to include 'Visual Studio'
-      expect(setup_compiler_build_generator({:name => 'Visual Studio'})).to raise_error(RuntimeError)
+      expect(setup_compiler_build_generator({:name => 'Visual Studio'})).to raise_error(CannotMatchCompiler)
       expect(setup_compiler_build_generator({:name => 'gccc'})).to include 'Unix'
     end
   end
