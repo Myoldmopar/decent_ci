@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'socket'
+
 require_relative 'decent_exceptions'
 require_relative 'processor'
 
@@ -200,7 +202,15 @@ module Configuration
     return compiler[:build_generator] unless compiler[:build_generator].nil?
 
     if compiler[:name].match(/.*Visual Studio.*/i)
-      'Visual Studio 16 2019'
+      found_version = compiler.fetch(:version, nil)
+      case found_version
+      when 16
+        'Visual Studio 16 2019'
+      when 17
+        'Visual Studio 17 2022'
+      else
+        raise CannotMatchCompiler, 'For Visual Studio, must specify version as either 16 or 17'
+      end
     else
       'Unix Makefiles'
     end
@@ -268,8 +278,32 @@ module Configuration
     compiler[:cmake_extra_flags] = setup_compiler_extra_flags(compiler, is_release)
     compiler[:num_parallel_builds] = setup_compiler_num_processors(compiler)
 
-    raise CannotMatchCompiler, 'Decent CI currently only deployed with Visual Studio version 16 (2019)' if compiler[:name] =~ /.*Visual Studio.*/i && compiler[:version] != 16
+    # alright, this is going to be super ugly
+    # unfortunately, Decent can't really tell what versions of VS are available on a specific machine
+    # as we go through the transition from 2019 to 2022, we have to somehow predetermine whether this machine
+    # can do a build...otherwise it will attempt to do the build, report a pending message to the dashboard
+    # and then fail, and the other machine won't pick it up.
+    # The root of the problem is that the Decent CI run image is not versioned, we are just winging it
+    # It has worked so far because we only had one Windows machine.  When we upgraded Visual Studio, it was
+    # simply a bumpy experience as we took it down and then restarted it.  I am trying to be a bit more
+    # smooth here.  We basically need to check if we are on the machine that can support 2019 or the machine that can
+    # support 2022.  This is equivalent to specifying 'runs-on' in GitHub Actions, or a certain Docker build name.
+    # we don't have that, so the best thing I can think of is trying to match by computer name.
+    # This should be very temporary, once I know 2022 is happy, I will install it on the older machine, and we can
+    # move on from 2019.
 
+    # :nocov: Not doing any testing on Windows right now
+    if compiler[:name] =~ /.*Visual Studio.*/i
+      case Socket.gethostname
+      when 'elee-40097s'
+        raise CannotMatchCompiler, 'This Decent CI instance currently only deployed with Visual Studio version 17 (2022)' if compiler[:version] != 17
+      when 'CBRG-W10VM'
+        raise CannotMatchCompiler, 'This Decent CI instance currently only deployed with Visual Studio version 16 (2019)' if compiler[:version] != 16
+      else
+        raise CannotMatchCompiler, "Unknown Windows Decent CI instance running: #{Socket.gethostname}"
+      end
+    end
+    # :nocov:
     compiler
   end
 
