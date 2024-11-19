@@ -7,7 +7,7 @@ AllCops:
 
 # This could be adjusted but does not bother me
 Layout/LineLength:
-  Max: 200
+  Max: 220
 
 # This is the one allowed global :-)
 Style/GlobalVars:
