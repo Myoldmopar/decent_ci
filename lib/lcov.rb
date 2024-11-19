@@ -7,7 +7,7 @@ module Lcov
   include Runners
 
   def generate_base_command_line(compiler, build_dir)
-    lcov_flags = "-c -d . -o ./lcov.output --no-external --base-directory ../#{compiler[:coverage_base_dir]}"
+    lcov_flags = "-c -d . -o ./lcov.output --no-external --base-directory ../#{compiler[:coverage_base_dir]} --ignore-errors source"
     "cd #{build_dir} && lcov #{lcov_flags}"
   end
 
