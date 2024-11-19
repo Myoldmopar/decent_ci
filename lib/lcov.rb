@@ -12,7 +12,7 @@ module Lcov
   end
 
   def generate_filter_command_line(build_dir)
-    "cd #{build_dir} && lcov -r ./lcov.output `pwd`/\\* -o ./lcov.output.filtered"
+    "cd #{build_dir} && lcov -r ./lcov.output `pwd`/\* -o ./lcov.output.filtered"
   end
 
   def generate_html_command_line(compiler, build_dir)
