@@ -20,13 +20,13 @@ try:
             target_upload_file_path = "{0}/{1}".format(file_dir_once_uploaded, os.path.relpath(local_file_path, source_dir))
             print("{0} => {1}".format(local_file_path, target_upload_file_path), file=sys.stderr)
             if target_upload_file_path.endswith(".html"):
-                content_type = {"Content-Type": "text/html"}
+                content_type = "text/html"
             elif target_upload_file_path.endswith(".svg"):
-                content_type = {"Content-Type": "image/svg+xml"}
+                content_type = "image/svg+xml"
             elif target_upload_file_path.endswith(".png"):
-                content_type = {"Content-Type": "image/png"}
+                content_type = "image/png"
             else:
-                content_type = {"Content-Type": "application/octet-stream"}
+                content_type = "application/octet-stream"
             conn.upload_file(
                 local_file_path, bucket_name, target_upload_file_path,
                 ExtraArgs={'ACL': 'public-read', "ContentType": content_type, "ContentDisposition": "inline"}
@@ -36,4 +36,3 @@ try:
 
 except Exception as e:
     print("Error uploading files: {0}".format(e))
-
