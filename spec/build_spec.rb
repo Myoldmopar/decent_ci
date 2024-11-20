@@ -249,13 +249,16 @@ class DummyPotentialBuild
   def pull_request?
     @pr
   end
+  def assign_pr_num_for_comment(pr_num)
+    @pr_num_for_comment = pr_num
+  end
 end
 
 describe 'Build Testing' do
   context 'when calling query_branches' do
     it 'should include branches that are valid and new' do
       allow(Octokit::Client).to receive(:new).and_return(DummyClient2.new)
-      allow(PotentialBuild).to receive(:new).and_return(true)
+      allow(PotentialBuild).to receive(:new).and_return(DummyPotentialBuild.new('dummy'))
       b = Build.new('abcdef', 'spec/resources', 10)
       expect(b.client.branches('', 1).length).to eql 8 # this is the absolute total
       b.query_branches

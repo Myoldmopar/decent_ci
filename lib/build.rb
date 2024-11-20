@@ -32,6 +32,9 @@ class Build
     @potential_builds = []
     @max_age = max_age
     github_check_rate_limit(@client.last_response.headers)
+    # Keep a mapping of branch name -> PR number for PRs which are based on non-fork branches
+    # This is only used for providing the GitHub status comment, nothing else
+    @branch_to_pr_number = {}
   end
 
   def query_branches
@@ -66,7 +69,10 @@ class Build
             login = branch_details.commit.author.login
           end
 
-          @potential_builds << PotentialBuild.new(@client, @token, @repository, nil, b.commit.sha, b.name, login, nil, nil, nil, nil, nil)
+          associated_pr_num = @branch_to_pr_number.fetch(b.name, nil)
+          pb = PotentialBuild.new(@client, @token, @repository, nil, b.commit.sha, b.name, login, nil, nil, nil, nil, nil)
+          pb.assign_pr_num_for_comment(associated_pr_num)
+          @potential_builds << pb
           $logger.info("Found a branch to add to potential_builds: #{b.name}")
         else
           $logger.info("Skipping potential build (#{b.name}), it hasn't been updated in #{days} days")
@@ -118,6 +124,8 @@ class Build
 
           if p.head.repo.full_name == p.base.repo.full_name
             $logger.info("Skipping pull-request originating from head repo: #{p.number}")
+            @branch_to_pr_number[p.head.ref] = p.number
+            $logger.info("  ...but matching branch to pr_number: #{p.head.ref} => #{p.number}")
           else
             $logger.info("Found an external PR to add to potential_builds: #{p.number}")
             @potential_builds << pb
