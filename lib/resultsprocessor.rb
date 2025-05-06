@@ -57,7 +57,7 @@ module ResultsProcessor
     type
   end
 
-  def process_cmake_results(src_dir, build_dir, stderr, cmake_exit_code, is_package)
+  def process_cmake_results(src_dir, build_dir, stderr, cmake_exit_code)
     results = []
 
     file = nil
@@ -141,11 +141,7 @@ module ResultsProcessor
 
     results.each { |r| $logger.debug("CMake error message parsed: #{r.inspect}") }
 
-    if is_package
-      @package_results.merge(results)
-    else
-      @build_results.merge(results)
-    end
+    @build_results.merge(results)
 
     cmake_exit_code.zero?
   end

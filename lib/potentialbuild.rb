@@ -31,41 +31,37 @@ class PotentialBuild
   include Runners
 
   attr_reader :tag_name, :commit_sha, :branch_name, :repository
-  attr_accessor :test_run, :failure
+  attr_accessor :test_run, :failure, :pr_num_to_use_for_comment
 
-  def initialize(client, token, repository, tag_name, commit_sha, branch_name, author, release_url, release_assets, # rubocop:disable Metrics/ParameterLists
-                 pull_id, pr_base_repository, pr_base_ref)
+  def initialize(client, token, repository, commit_sha, branch_name, author, # rubocop:disable Metrics/ParameterLists
+                 pull_id, pr_base_repository, pr_base_ref, pr_num_to_use_for_comment = nil)
+    @pr_num_to_use_for_comment = pr_num_to_use_for_comment
     @client = client
-    @config = load_configuration(repository, (tag_name.nil? ? commit_sha : tag_name), !release_url.nil?)
+    @config = load_configuration(repository, commit_sha)
     @config.repository_name = github_query(@client) { @client.repo(repository).name }
     @config.repository = repository
     @config.token = token
     @repository = repository
-    @tag_name = tag_name
     @commit_sha = commit_sha
     @branch_name = branch_name
-    @release_url = release_url
-    @release_assets = release_assets
     @author = author
 
-    @buildid = @tag_name || @commit_sha
-    @refspec = @tag_name || @branch_name
+    @buildid = @commit_sha
+    @refspec = @branch_name
 
     @pull_id = pull_id
     @pull_request_base_repository = pr_base_repository
     @pull_request_base_ref = pr_base_ref
 
-    @short_buildid = get_short_form(@tag_name) || @commit_sha[0..9]
+    @short_buildid = @commit_sha[0..9]
     unless @pull_id.nil?
       @buildid = "#{@buildid}-PR#{@pull_id}"
       @short_buildid = "#{@short_buildid}-PR#{@pull_id}"
     end
 
-    @package_locations = nil
     @test_results = nil
     @test_messages = []
     @build_results = SortedSet.new
-    @package_results = SortedSet.new
     @dateprefix = nil
     @failure = nil
     @test_run = false
@@ -133,7 +129,7 @@ class PotentialBuild
     # TODO: update this to be a merge, not just a checkout of the pull request branch
     FileUtils.mkdir_p src_dir
 
-    if @pull_id.nil?
+    if @acting_as_baseline || @pull_id.nil?
       $logger.info("Checking out branch \"#{@refspec}\"")
       _, _, result = run_scripts(
         @config,
@@ -280,14 +276,14 @@ class PotentialBuild
     File.join(Dir.pwd, 'clone_regressions')
   end
 
-  def do_build(compiler, regression_baseline, is_release = false)
+  def do_build(compiler, regression_baseline)
     src_dir = this_src_dir
     build_dir = this_build_dir
     start_time = Time.now
     checkout_succeeded = checkout src_dir
     # TODO: Abort if checkout did not succeed...
     this_device_id = device_id compiler
-    args = CMakeBuildArgs.new(compiler[:build_type], this_device_id, is_release)
+    args = CMakeBuildArgs.new(compiler[:build_type], this_device_id)
     cmake_build compiler, src_dir, build_dir, this_regression_dir, regression_baseline, args if checkout_succeeded
     @build_time = 0 if @build_time.nil?
     @build_time += (Time.now - start_time)
@@ -339,11 +335,9 @@ class PotentialBuild
   end
 
   def next_build
-    @package_locations = nil
     @test_results = nil
     @test_messages = []
     @build_results = SortedSet.new
-    @package_results = SortedSet.new
     @dateprefix = nil
     @failure = nil
     @build_time = nil
@@ -536,39 +530,6 @@ class PotentialBuild
     @valgrind_counters_results = results
   end
 
-  def try_to_repost_asset(response, asset_name)
-    asset_url = nil
-
-    if !response.nil? && response.state == 'new'
-      $logger.error("Error uploading asset #{response.url}")
-      asset_url = response.url
-    end
-
-    if asset_url.nil?
-      $logger.error('nil response, attempting to find release url')
-      assets = github_query(@client) { @client.release_assets(@release_url) }
-
-      assets.each do |a|
-        if a.name == asset_name
-          asset_url = a.url
-          break
-        end
-      end
-    end
-
-    return if asset_url.nil?
-
-    $logger.error("Found release url in list of assets: #{asset_url}")
-    $logger.error("Deleting existing asset_url and trying again #{asset_url}")
-    @package_results << CodeMessage.new('CMakeLists.txt', 1, 0, 'warning', "Error attempting to upload release asset, deleting and trying again. #{asset_url}\nDuring attempt #{try_num}")
-    begin
-      github_query(@client) { @client.delete_release_asset(asset_url) }
-    rescue
-      $logger.error("Error deleting failed asset, continuing to next try #{e}")
-      @package_results << CodeMessage.new('CMakeLists.txt', 1, 0, 'warning', "Error attempting to delete failed release asset upload.\nDuring attempt #{try_num}\nRelease asset #{e}")
-    end
-  end
-
   def post_results(compiler, pending)
     @dateprefix = DateTime.now.utc.strftime('%F') if @dateprefix.nil?
 
@@ -620,17 +581,6 @@ class PotentialBuild
       build_warnings = @build_results.count - build_errors
     end
 
-    package_errors = 0
-    package_warnings = 0
-    package_results_data = []
-
-    @package_results&.each do |b|
-      package_errors += 1 if b.error?
-      package_warnings += 1 if b.warning?
-
-      package_results_data << b.inspect
-    end
-
     valgrind_counters_total_time = nil
     valgrind_counters_test_count = 0
     valgrind_counters_total_conditional_branches = nil
@@ -676,14 +626,6 @@ class PotentialBuild
       perf_counters['perf_test_count'] = perf_test_count
     end
 
-    package_names_string = nil
-    unless @package_locations.nil?
-      package_names_string = ''
-      @package_locations.each do |location|
-        package_names_string += "; #{Pathname.new(location).basename}"
-      end
-    end
-
     yaml_data = {
       'title' => build_base_name(compiler),
       'permalink' => "#{build_base_name(compiler)}.html",
@@ -693,8 +635,6 @@ class PotentialBuild
       'unhandled_failure' => !@failure.nil?,
       'build_error_count' => build_errors,
       'build_warning_count' => build_warnings,
-      'package_error_count' => package_errors,
-      'package_warning_count' => package_warnings,
       'test_count' => test_results_total,
       'test_passed_count' => test_results_passed,
       'repository' => @repository,
@@ -703,11 +643,6 @@ class PotentialBuild
       'architecture' => compiler[:architecture],
       'os' => @config.os,
       'os_release' => @config.os_release,
-      'is_release' => release?,
-      'release_packaged' => !@package_locations.nil?,
-      'packaging_skipped' => compiler[:skip_packaging],
-      'package_name' => package_names_string,
-      'tag_name' => @tag_name,
       'commit_sha' => @commit_sha,
       'branch_name' => @branch_name,
       'test_run' => !@test_results.nil?,
@@ -718,7 +653,6 @@ class PotentialBuild
       'pending' => pending,
       'build_time' => @build_time,
       'test_time' => @test_time,
-      'package_time' => @package_time,
       'install_time' => @install_time,
       'results_repository' => @config.results_repository.to_s,
       'machine_name' => Socket.gethostname.to_s,
@@ -733,7 +667,6 @@ class PotentialBuild
       'coverage_functions' => @coverage_functions,
       'coverage_total_functions' => @coverage_total_functions,
       'coverage_url' => @coverage_url,
-      'asset_url' => @asset_url,
       'performance_total_time' => valgrind_counters_total_time,
       'performance_test_count' => valgrind_counters_test_count,
       'valgrind_counters_total_time' => valgrind_counters_total_time,
@@ -750,7 +683,6 @@ class PotentialBuild
       'build_results' => build_results_data,
       'test_results' => test_results_data,
       'failure' => @failure,
-      'package_results' => package_results_data,
       'configuration' => yaml_data,
       'performance_results' => @valgrind_counters_results,
       'perf_performance_results' => @perf_counters_results,
@@ -936,10 +868,12 @@ class PotentialBuild
       end
 
       if !pending && @config.post_results_comment
-        if !@commit_sha.nil? && @repository == @config.repository
-          github_query(@client) { @client.create_commit_comment(@config.repository, @commit_sha, github_document) }
+        if !@pr_num_to_use_for_comment.nil?
+          github_query(@client) { @client.add_comment(@config.repository, @pr_num_to_use_for_comment, github_document) }
         elsif !@pull_id.nil?
           github_query(@client) { @client.add_comment(@config.repository, @pull_id, github_document) }
+        elsif !@commit_sha.nil? && @repository == @config.repository
+          github_query(@client) { @client.create_commit_comment(@config.repository, @commit_sha, github_document) }
         end
       end
 

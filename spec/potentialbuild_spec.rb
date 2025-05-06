@@ -34,7 +34,7 @@ describe 'PotentialBuild Testing' do
       pull_id = 32
       pr_base_repo = nil
       pr_base_ref = nil
-      PotentialBuild.new(client, token, repo, tag_name, commit_sha, branch_name, author, release_url, release_assets, pull_id, pr_base_repo, pr_base_ref)
+      PotentialBuild.new(client, token, repo, commit_sha, branch_name, author, pull_id, pr_base_repo, pr_base_ref)
     end
   end
   context 'when calling checkout' do
@@ -45,7 +45,7 @@ describe 'PotentialBuild Testing' do
       allow_any_instance_of(Octokit::Client).to receive(:content).and_return([PotentialBuildNamedDummy.new('.decent_ci.yaml')])
       allow_any_instance_of(Octokit::Client).to receive(:repo).and_return(PotentialBuildDummyRepo.new)
       client = Octokit::Client.new(:access_token => 'abc')
-      p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', '', '', '', nil, '', '')
+      p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', nil, '', '')
       src_dir = Dir.mktmpdir
       expect(p.checkout(src_dir)).to be_truthy
     end
@@ -53,7 +53,7 @@ describe 'PotentialBuild Testing' do
       allow_any_instance_of(Octokit::Client).to receive(:content).and_return([PotentialBuildNamedDummy.new('.decent_ci.yaml')])
       allow_any_instance_of(Octokit::Client).to receive(:repo).and_return(PotentialBuildDummyRepo.new)
       client = Octokit::Client.new(:access_token => 'abc')
-      p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', '', '', '', 1, '', '')
+      p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', 1, '', '')
       src_dir = Dir.mktmpdir
       expect(p.checkout(src_dir)).to be_truthy
     end
@@ -63,7 +63,7 @@ describe 'PotentialBuild Testing' do
       allow_any_instance_of(Octokit::Client).to receive(:content).and_return([PotentialBuildNamedDummy.new('.decent_ci.yaml')])
       allow_any_instance_of(Octokit::Client).to receive(:repo).and_return(PotentialBuildDummyRepo.new)
       client = Octokit::Client.new(:access_token => 'abc')
-      @p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', '', '', '', 0, '', '')
+      @p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', 0, '', '')
     end
     it 'should quit gracefully if not doing coverage' do
       expect(@p.do_coverage({})).to be_nil
@@ -79,7 +79,7 @@ describe 'PotentialBuild Testing' do
       allow_any_instance_of(Octokit::Client).to receive(:content).and_return([PotentialBuildNamedDummy.new('.decent_ci.yaml')])
       allow_any_instance_of(Octokit::Client).to receive(:repo).and_return(PotentialBuildDummyRepo.new)
       client = Octokit::Client.new(:access_token => 'abc')
-      @p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', '', '', '', 0, '', '')
+      @p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', 0, '', '')
     end
     it 'should quit gracefully if not doing upload' do
       expect(@p.do_upload({})).to be_nil
@@ -96,7 +96,7 @@ describe 'PotentialBuild Testing' do
       @client = Octokit::Client.new(:access_token => 'abc')
     end
     it 'should call cmake_build if it is trying to run any other compilers' do
-      p = PotentialBuild.new(@client, '', 'spec/resources', '', '', '', '', '', '', 0, '', '')
+      p = PotentialBuild.new(@client, '', 'spec/resources', '', '', '', 0, '', '')
       allow_any_instance_of(PotentialBuild).to receive(:checkout).and_return(true)
       expect_any_instance_of(PotentialBuild).to receive(:cmake_build).and_return(nil)
       p.do_build({:name => "OTHER"}, nil)
@@ -109,13 +109,13 @@ describe 'PotentialBuild Testing' do
       @client = Octokit::Client.new(:access_token => 'abc')
     end
     it 'should build and run cmake tests when appropriate' do
-      p = PotentialBuild.new(@client, '', 'spec/resources', '', '', '', '', '', '', 0, '', '')
+      p = PotentialBuild.new(@client, '', 'spec/resources', '', '', '', 0, '', '')
       allow_any_instance_of(PotentialBuild).to receive(:do_build).and_return(true)
       expect_any_instance_of(PotentialBuild).to receive(:cmake_test).and_return(nil)
       p.do_test({:name => "gcccc"}, nil)
     end
     it 'should respond to ENV for skipping tests' do
-      p = PotentialBuild.new(@client, '', 'spec/resources', '', '', '', '', '', '', 0, '', '')
+      p = PotentialBuild.new(@client, '', 'spec/resources', '', '', '', 0, '', '')
       allow_any_instance_of(PotentialBuild).to receive(:do_build).and_return(true)
       ENV['DECENT_CI_SKIP_TEST'] = 'Y'
       p.do_test({:name => "gcccc"}, nil)  # should just return
@@ -127,7 +127,7 @@ describe 'PotentialBuild Testing' do
       allow_any_instance_of(Octokit::Client).to receive(:content).and_return([PotentialBuildNamedDummy.new('.decent_ci.yaml')])
       allow_any_instance_of(Octokit::Client).to receive(:repo).and_return(PotentialBuildDummyRepo.new)
       client = Octokit::Client.new(:access_token => 'abc')
-      p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', '', '', '', 0, '', '')
+      p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', 0, '', '')
       p.set_as_baseline
       expect(p.this_src_dir).to include 'baseline'
       p.next_build
@@ -140,7 +140,7 @@ describe 'PotentialBuild Testing' do
       allow_any_instance_of(Octokit::Client).to receive(:content).and_return([PotentialBuildNamedDummy.new('.decent_ci.yaml')])
       allow_any_instance_of(Octokit::Client).to receive(:repo).and_return(PotentialBuildDummyRepo.new)
       client = Octokit::Client.new(:access_token => 'abc')
-      p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', '', '', '', 0, '', '')
+      p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', 0, '', '')
       expect(p.needs_regression_test({:skip_regression => false})).to be_truthy
       expect(p.needs_regression_test({:skip_regression => true})).to be_falsey
       ENV['DECENT_CI_SKIP_REGRESSIONS'] = 'Y'
@@ -151,7 +151,7 @@ describe 'PotentialBuild Testing' do
       allow_any_instance_of(Octokit::Client).to receive(:content).and_return([PotentialBuildNamedDummy.new('.decent_ci.yaml')])
       allow_any_instance_of(Octokit::Client).to receive(:repo).and_return(PotentialBuildDummyRepo.new)
       client = Octokit::Client.new(:access_token => 'abc')
-      p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', '', '', '', 0, '', '')
+      p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', 0, '', '')
       expect(p.needs_regression_test({:skip_regression => false})).to be_truthy
     end
   end
@@ -160,7 +160,7 @@ describe 'PotentialBuild Testing' do
       allow_any_instance_of(Octokit::Client).to receive(:content).and_return([PotentialBuildNamedDummy.new('.decent_ci.yaml')])
       allow_any_instance_of(Octokit::Client).to receive(:repo).and_return(PotentialBuildDummyRepo.new)
       client = Octokit::Client.new(:access_token => 'abc')
-      @p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', '', '', '', 0, '', '')
+      @p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', 0, '', '')
     end
     it 'should properly parse a callgrind file' do
       dir = Dir.mktmpdir
@@ -201,7 +201,7 @@ fn=func2
       allow_any_instance_of(Octokit::Client).to receive(:content).and_return([PotentialBuildNamedDummy.new('.decent_ci.yaml')])
       allow_any_instance_of(Octokit::Client).to receive(:repo).and_return(PotentialBuildDummyRepo.new)
       client = Octokit::Client.new(:access_token => 'abc')
-      @p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', '', '', '', 0, '', '')
+      @p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', 0, '', '')
     end
     it 'should always need to run for test runs' do
       @p.test_run = true
@@ -223,12 +223,8 @@ fn=func2
       allow_any_instance_of(Octokit::Client).to receive(:repo).and_return(PotentialBuildDummyRepo.new)
       @client = Octokit::Client.new(:access_token => 'abc')
     end
-    it 'should use the tag name for tagged builds' do
-      p = PotentialBuild.new(@client, '', 'spec/resources', 'ABCDEF', '', 'branch', '', '', '', 0, '', '')
-      expect(p.this_branch_folder).to include 'ABCDEF'
-    end
-    it 'should use the branch name for non-tagged builds' do
-      p = PotentialBuild.new(@client, '', 'spec/resources', '', '', 'branch', '', '', '', 0, '', '')
+    it 'should use the branch name for builds' do
+      p = PotentialBuild.new(@client, '', 'spec/resources', '', 'branch', '', 0, '', '')
       expect(p.this_branch_folder).to include 'branch'
     end
   end
@@ -237,7 +233,7 @@ fn=func2
       allow_any_instance_of(Octokit::Client).to receive(:content).and_return([PotentialBuildNamedDummy.new('.decent_ci.yaml')])
       allow_any_instance_of(Octokit::Client).to receive(:repo).and_return(PotentialBuildDummyRepo.new)
       client = Octokit::Client.new(:access_token => 'abc')
-      @p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', '', '', '', 0, '', '')
+      @p = PotentialBuild.new(client, '', 'spec/resources', '', '', '', 0, '', '')
     end
     it 'get_src_dir should make a selection based on baseline mode' do
       expect(@p.this_src_dir).to include 'branch'
