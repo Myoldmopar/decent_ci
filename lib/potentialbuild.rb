@@ -774,7 +774,7 @@ class PotentialBuild
                        (test_results_passed.to_f / test_results_total.to_f) * 100.0
                      end
 
-      if test_percent == 100.0
+      if (test_percent - 100.0).abs < Float::EPSILON
         test_color = 'green'
       else
         test_color = 'red'
