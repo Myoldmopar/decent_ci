@@ -306,8 +306,6 @@ module Configuration
     # do final touchups on the configuration
     configuration.aging_pull_requests_notification = true if configuration.aging_pull_requests_notification.nil?
     configuration.aging_pull_requests_numdays = 7 if configuration.aging_pull_requests_numdays.nil?
-    configuration.test_pass_limit = 99.9999 if configuration.test_pass_limit.nil?
-    configuration.test_warn_limit = 90.00 if configuration.test_warn_limit.nil?
 
     configuration
   end
