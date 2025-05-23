@@ -723,8 +723,6 @@ class PotentialBuild
       'results_repository' => @config.results_repository.to_s,
       'machine_name' => Socket.gethostname.to_s,
       'machine_ip' => Socket.ip_address_list.find { |ai| ai.ipv4? && !ai.ipv4_loopback? }.ip_address.to_s,
-      'test_pass_limit' => @config.test_pass_limit,
-      'test_warn_limit' => @config.test_warn_limit,
       'coverage_enabled' => compiler[:coverage_enabled],
       'coverage_pass_limit' => compiler[:coverage_pass_limit],
       'coverage_warn_limit' => compiler[:coverage_warn_limit],
@@ -776,10 +774,8 @@ class PotentialBuild
                        (test_results_passed.to_f / test_results_total.to_f) * 100.0
                      end
 
-      if test_percent > @config.test_pass_limit
+      if (test_percent - 100.0).abs < Float::EPSILON
         test_color = 'green'
-      elsif test_percent > @config.test_warn_limit
-        test_color = 'yellow'
       else
         test_color = 'red'
         test_failed = true
